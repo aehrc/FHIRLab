@@ -166,14 +166,14 @@ GET https://tx.fhirlab.net/fhir/CodeSystem/$validate-code?url=http://snomed.info
 
 | Service | Type | URL |
 |---------|------|-----|
-| FHIRLab CDR | CDR (HAPI FHIR R4) | `https://cdr.fhirlab.net/fhir` |
-| PHCore CDR | CDR (HAPI FHIR R4 + PH Core IG) | `https://cdr.phcore.fhirlab.net/fhir` |
-| FHIRLab Terminology | Terminology (Ontoserver) | `https://tx.fhirlab.net/fhir` |
-| Snowstorm | Terminology (SNOMED CT) | `https://snowstorm.fhirlab.net/fhir` |
-| Bahmni | Hospital System / EMR | `https://bahmni.dev.fhirlab.net` |
-| Aidbox | FHIR Platform | `https://aidbox.fhirlab.net` |
-| BedaEMR | EMR | `https://beda.fhirlab.net` |
-| SMILE CDR | CDR | `https://smile.fhirlab.net` |
+| FHIRLab CDR | CDR (HAPI FHIR R4) | https://cdr.fhirlab.net/fhir |
+| PHCore CDR | CDR (HAPI FHIR R4 + PH Core IG) | https://cdr.phcore.fhirlab.net/fhir |
+| FHIRLab Terminology | Terminology (Ontoserver) | https://tx.fhirlab.net/fhir |
+| Snowstorm | Terminology (SNOMED CT) | https://snowstorm.fhirlab.net/fhir |
+| Bahmni | Hospital System / EMR | https://bahmni.dev.fhirlab.net |
+| Aidbox | FHIR Platform | https://aidbox.fhirlab.net |
+| BedaEMR | EMR | https://beda.fhirlab.net |
+| SMILE CDR | CDR | https://smile.fhirlab.net |
 
 ### Components in Use
 
