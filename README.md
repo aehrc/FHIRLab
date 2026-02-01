@@ -1,119 +1,190 @@
-[![Build Status](https://gitlab.com/pages/jekyll/badges/master/pipeline.svg)](https://gitlab.com/pages/jekyll/-/pipelines?ref=master)
-![Jekyll Version](https://img.shields.io/gem/v/jekyll.svg)
+# FHIRLab
+
+FHIRLab provides a suite of FHIR-compliant healthcare interoperability services including Clinical Data Repositories (CDR), Terminology Servers, and EMR systems. This document describes the available components, their endpoints, and how they work together.
 
 ---
 
-Example [Jekyll] website using GitLab Pages.  View it live at https://pages.gitlab.io/jekyll
+## Table of Contents
 
-[Learn more about GitLab Pages](https://pages.gitlab.io) or read the the [official GitLab Pages documentation](https://docs.gitlab.com/ce/user/project/pages/).
+- [Architecture](#architecture)
+- [Service Inventory](#service-inventory)
+  - [Clinical Data Repository (CDR) Servers](#clinical-data-repository-cdr-servers)
+  - [Terminology Servers](#terminology-servers)
+  - [EMR / EHR Systems](#emr--ehr-systems)
+- [Terminology Content](#terminology-content)
+- [Validation & Operations](#validation--operations)
+- [Quick Reference](#quick-reference)
 
 ---
 
-<!-- START doctoc generated TOC please keep comment here to allow auto update -->
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+## Architecture
 
-- [Getting Started](#getting-started)
-  - [Start by forking this repository](#start-by-forking-this-repository)
-  - [Start from a local Jekyll project](#start-from-a-local-jekyll-project)
-- [GitLab CI](#gitlab-ci)
-- [Using Jekyll locally](#using-jekyll-locally)
-- [GitLab User or Group Pages](#gitlab-user-or-group-pages)
-- [Did you fork this project?](#did-you-fork-this-project)
-- [Other examples](#other-examples)
-- [Troubleshooting](#troubleshooting)
+The diagram below illustrates the FHIRLab infrastructure and how each component interacts:
 
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+```mermaid
+graph TB
+    subgraph Users["Users / Applications"]
+        U["👤 User / Client Application"]
+    end
 
-## Getting Started
+    subgraph CDR["Clinical Data Repository Servers"]
+        CDR1["cdr.fhirlab.net/fhir<br/>FHIRLab CDR"]
+        CDR2["cdr.phcore.fhirlab.net/fhir<br/>PHCore CDR"]
+    end
 
-You can get started with GitLab Pages using Jekyll easily by either forking this repository or by uploading a new/existing Jekyll project.
+    subgraph TX["Terminology Servers"]
+        TX1["tx.fhirlab.net/fhir<br/>FHIRLab Terminology<br/>(LOINC + SNOMED CT)"]
+        TX2["snowstorm.fhirlab.net/fhir<br/>Snowstorm<br/>(SNOMED CT)"]
+    end
 
-Remember you need to wait for your site to build before you will be able to see your changes.  You can track the build on the **Pipelines** tab.
+    U -->|"CRUD Operations<br/>$validate"| CDR1
+    U -->|"CRUD Operations<br/>$validate (PH Core IG)"| CDR2
+    U -->|"$lookup<br/>$expand<br/>$validate-code"| TX1
+    U -->|"$lookup<br/>$expand<br/>(SNOMED CT)"| TX2
 
-### Start by forking this repository
-
-1. Fork this repository.
-1. **IMPORTANT:** Remove the fork relationship.
-Go to **Settings (⚙)** > **Edit Project** and click the **"Remove fork relationship"** button.
-1. Enable Shared Runners.
-Go to **Settings (⚙)** > **Pipelines** and click the **"Enable shared Runners"** button.
-1. Rename the repository to match the name you want for your site.
-1. Edit your website through GitLab or clone the repository and push your changes.
-
-### Start from a local Jekyll project
-
-1. [Install][] Jekyll.
-1. Use `jekyll new` to create a new Jekyll Project.
-1. Add [this `.gitlab-ci.yml`](.gitlab-ci.yml) to the root of your project.
-1. Push your repository and changes to GitLab.
-
-## GitLab CI
-
-This project's static Pages are built by [GitLab CI][ci], following the steps
-defined in [`.gitlab-ci.yml`](.gitlab-ci.yml):
-
-```
-image: ruby:latest
-
-variables:
-  JEKYLL_ENV: production
-
-pages:
-  script:
-  - bundle install
-  - bundle exec jekyll build -d public
-  artifacts:
-    paths:
-    - public
-  only:
-  - master
+    CDR1 -.->|"Remote Terminology<br/>$lookup forwarding"| TX1
+    CDR2 -.->|"Remote Terminology<br/>$lookup forwarding"| TX1
 ```
 
-## Using Jekyll locally
+**Key interactions:**
 
-To work locally with this project, you'll have to follow the steps below:
+| From | To | Operations |
+|------|-----|------------|
+| User | CDR Servers | CRUD, `$validate` |
+| User | Terminology Servers | `$lookup`, `$expand`, `$validate-code` |
+| CDR Servers | Ontoserver | Remote `$lookup` forwarding |
 
-1. Fork, clone or download this project
-1. [Install][] Jekyll
-1. Download dependencies: `bundle`
-1. Build and preview: `bundle exec jekyll serve`
-1. Add content
+---
 
-The above commands should be executed from the root directory of this project.
+## Service Inventory
 
-Read more at Jekyll's [documentation][].
+### Clinical Data Repository (CDR) Servers
 
-## GitLab User or Group Pages
+FHIRLab runs **two HAPI FHIR instances** to support different use cases:
 
-To use this project as your user/group website, you will need one additional
-step: just rename your project to `namespace.gitlab.io`, where `namespace` is
-your `username` or `groupname`. This can be done by navigating to your
-project's **Settings**.
+| Friendly Name | Endpoint | Description | Capability Statement |
+|---------------|----------|-------------|---------------------|
+| **FHIRLab CDR** | https://cdr.fhirlab.net/fhir | Base FHIR R4 server for general use | [metadata](https://cdr.fhirlab.net/fhir/metadata) |
+| **PHCore CDR** | https://cdr.phcore.fhirlab.net/fhir | FHIR R4 server with [PH Core IG](https://github.com/UP-Manila-SILab/ph-core/) validation | [metadata](https://cdr.phcore.fhirlab.net/fhir/metadata) |
 
-Read more about [user/group Pages][userpages] and [project Pages][projpages].
+> **Note:** "PHCore" refers to the [Philippine Health Core Implementation Guide](https://github.com/UP-Manila-SILab/ph-core/). The PHCore CDR supports validation against the PH Core IG ([Connectathon release](https://github.com/UP-Manila-SILab/ph-core/releases/tag/Connectathon)).
 
-## Did you fork this project?
+#### CDR Features
 
-If you forked this project for your own use, please go to your project's
-**Settings** and remove the forking relationship, which won't be necessary
-unless you want to contribute back to the upstream project.
+- ✅ Full CRUD operations on FHIR resources
+- ✅ `$validate` operation against loaded Implementation Guides
+- ✅ Remote terminology forwarding to FHIRLab Terminology Server for `$lookup`
+- ⚠️ `$expand` and `$validate-code` require local terminology content
 
-## Other examples
+> 📖 See detailed reports: [FHIRLab CDR](documentation/reports/cdr_fhirlab_net_20260130_151439.md) | [PHCore CDR](documentation/reports/cdr_phcore_fhirlab_net_20260130_151439.md)
 
-* [jekyll-branched](https://gitlab.com/pages/jekyll-branched) demonstrates how you can keep your GitLab Pages site in one branch and your project's source code in another.
-* The [jekyll-themes](https://gitlab.com/jekyll-themes) group contains a collection of example projects you can fork (like this one) having different visual styles.
+---
 
-## Troubleshooting
+### Terminology Servers
 
-1. CSS is missing! That means two things:
-    * Either that you have wrongly set up the CSS URL in your templates, or
-    * your static generator has a configuration option that needs to be explicitly
-    set in order to serve static assets under a relative URL.
+| Friendly Name | Endpoint | Content | Capability Statement |
+|---------------|----------|---------|---------------------|
+| **FHIRLab Terminology** (Ontoserver) | https://tx.fhirlab.net/fhir | LOINC, SNOMED CT International, SNOMED GPS | [metadata](https://tx.fhirlab.net/fhir/metadata) |
+| **Snowstorm** | https://snowstorm.fhirlab.net/fhir | SNOMED CT GPS | [metadata](https://snowstorm.fhirlab.net/fhir/metadata) |
 
-[ci]: https://about.gitlab.com/gitlab-ci/
-[Jekyll]: http://jekyllrb.com/
-[install]: https://jekyllrb.com/docs/installation/
-[documentation]: https://jekyllrb.com/docs/home/
-[userpages]: https://docs.gitlab.com/ce/user/project/pages/introduction.html#user-or-group-pages
-[projpages]: https://docs.gitlab.com/ce/user/project/pages/introduction.html#project-pages
+> **Note:** Access to full SNOMED CT content on Snowstorm requires a SNOMED CT International license.
+
+#### Terminology Features
+
+- ✅ `$lookup` - Get details about a code
+- ✅ `$expand` - Expand a ValueSet
+- ✅ `$validate-code` - Validate a code against a ValueSet or CodeSystem
+
+> 📖 See detailed reports: [FHIRLab Terminology](documentation/reports/tx_fhirlab_net_20260130_151439.md) | [Snowstorm](documentation/reports/snowstorm_fhirlab_net_20260130_151439.md)
+
+---
+
+### EMR / EHR Systems
+
+| Component | Description | Status |
+|-----------|-------------|--------|
+| **Bahmni** | Open-source hospital system | 🔧 Available |
+| **Aidbox** | FHIR platform | 🔧 Available |
+| **BedaEMR** | Electronic Medical Records | 🔧 Available |
+| **SMILE CDR** | Clinical Data Repository | 🔧 Available |
+
+---
+
+## Terminology Content
+
+The following terminology content is available across FHIRLab services:
+
+| Terminology | FHIRLab Terminology (Ontoserver) | Snowstorm |
+|-------------|----------------------------------|-----------|
+| SNOMED CT International | ✅ | ❌ |
+| SNOMED CT GPS | ✅ | ✅ |
+| LOINC | ✅ | ❌ |
+
+---
+
+## Validation & Operations
+
+### Remote Terminology Integration
+
+Both CDR servers are configured with [remote terminology forwarding](https://gitlab.com/australian-e-health-research-centre/akkadakka/-/wikis/04_HAPI_Starter_Configuration/03_Remote_Terminology) to the FHIRLab Terminology Server (Ontoserver).
+
+**How it works:**
+
+```
+┌─────────────┐     $lookup      ┌─────────────────────┐
+│  CDR Server │ ───────────────► │ FHIRLab Terminology │
+│  (HAPI)     │    forwarding    │    (Ontoserver)     │
+└─────────────┘                  └─────────────────────┘
+```
+
+### Supported Operations
+
+| Operation | CDR Servers | Terminology Servers |
+|-----------|-------------|---------------------|
+| `$lookup` | ✅ (via remote forwarding) | ✅ Native |
+| `$expand` | ⚠️ Limited (requires local content) | ✅ Native |
+| `$validate-code` | ⚠️ Limited (requires local content) | ✅ Native |
+| `$validate` (resource) | ✅ Native | N/A |
+
+### Example: Using `$expand`
+
+```http
+GET https://tx.fhirlab.net/fhir/ValueSet/$expand?url=http://loinc.org/vs/LL1000-0
+```
+
+### Example: Using `$validate-code`
+
+```http
+GET https://tx.fhirlab.net/fhir/CodeSystem/$validate-code?url=http://snomed.info/sct&code=404684003
+```
+
+---
+
+## Quick Reference
+
+### All Endpoints
+
+| Service | Type | URL |
+|---------|------|-----|
+| FHIRLab CDR | CDR (HAPI FHIR R4) | `https://cdr.fhirlab.net/fhir` |
+| PHCore CDR | CDR (HAPI FHIR R4 + PH Core IG) | `https://cdr.phcore.fhirlab.net/fhir` |
+| FHIRLab Terminology | Terminology (Ontoserver) | `https://tx.fhirlab.net/fhir` |
+| Snowstorm | Terminology (SNOMED CT) | `https://snowstorm.fhirlab.net/fhir` |
+
+### Components in Use
+
+> **Note:** The components listed below are the **only active components** in FHIRLab. All other previously available services have been removed.
+
+| Component | Purpose | Instances |
+|-----------|---------|-----------|
+| **HAPI FHIR** | Clinical Data Repository | 2 (Base R4 + PH Core) |
+| **Ontoserver** | Terminology Server | 1 |
+| **Snowstorm** | SNOMED CT Server | 1 |
+| **Bahmni** | Hospital System / EMR | 1 |
+| **Aidbox** | FHIR Platform | 1 |
+| **BedaEMR** | EMR | 1 |
+| **SMILE CDR** | CDR | 1 |
+
+---
+
+
