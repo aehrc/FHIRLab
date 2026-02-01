@@ -103,7 +103,7 @@ FHIRLab runs **two HAPI FHIR instances** to support different use cases:
 
 | Component | Description | Endpoint | Status |
 |-----------|-------------|----------|--------|
-| **Bahmni** | Open-source hospital system | https://bahmni.fhirlab.net | 🔧 Available |
+| **Bahmni** | Open-source hospital system | https://bahmni.dev.fhirlab.net | 🔧 Available |
 | **Aidbox** | FHIR platform | https://aidbox.fhirlab.net | 🔧 Available |
 | **BedaEMR** | Electronic Medical Records | https://beda.fhirlab.net | 🔧 Available |
 | **SMILE CDR** | Clinical Data Repository | https://smile.fhirlab.net | 🔧 Available |
@@ -170,7 +170,7 @@ GET https://tx.fhirlab.net/fhir/CodeSystem/$validate-code?url=http://snomed.info
 | PHCore CDR | CDR (HAPI FHIR R4 + PH Core IG) | `https://cdr.phcore.fhirlab.net/fhir` |
 | FHIRLab Terminology | Terminology (Ontoserver) | `https://tx.fhirlab.net/fhir` |
 | Snowstorm | Terminology (SNOMED CT) | `https://snowstorm.fhirlab.net/fhir` |
-| Bahmni | Hospital System / EMR | `https://bahmni.fhirlab.net` |
+| Bahmni | Hospital System / EMR | `https://bahmni.dev.fhirlab.net` |
 | Aidbox | FHIR Platform | `https://aidbox.fhirlab.net` |
 | BedaEMR | EMR | `https://beda.fhirlab.net` |
 | SMILE CDR | CDR | `https://smile.fhirlab.net` |
