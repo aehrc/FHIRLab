@@ -1,93 +1,233 @@
-# core-website
+# FHIRLab Core
 
+A simple, container-based FHIR learning sandbox designed for regional teams with basic technical skills. FHIRLab Core provides a complete healthcare interoperability stack including HAPI FHIR R4, Snowstorm terminology server, and optional SMART on FHIR demonstration capabilities.
 
+## Overview
 
-## Getting started
+FHIRLab Core enables teams to quickly deploy, experiment with, and learn FHIR-based healthcare interoperability standards without requiring ongoing DevOps support.
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+### Components
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+1. **HAPI FHIR (R4)** - Full-featured FHIR server for storing and querying healthcare data
+2. **Snowstorm** - SNOMED CT terminology server (open-source, avoiding licensing issues)
+3. **SMART on FHIR Launcher** (Optional) - Read-only demonstration for learning SMART authentication flows
 
-## Add your files
+### Guiding Principle
 
-* [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-* [Add files using the command line](https://docs.gitlab.com/topics/git/add_files/#add-files-to-a-git-repository) or push an existing Git repository with the following command:
+FHIRLab self-deployments rely on simple, transparent, container-based approaches (basic Docker images) sufficient for a learning sandbox, rather than production-grade operational automation.
 
+## Prerequisites
+
+- Docker (version 20.x or later)
+- Docker Compose (version 2.x or later)
+- At least 4GB RAM available for containers
+- Basic terminal/command-line skills
+
+## Quick Start
+
+### 1. Clone the Repository
+
+```bash
+git clone https://gitlab.com/australian-e-health-research-centre/digital-health-strengthening-standards-capability/core-website.git
+cd core-website
 ```
-cd existing_repo
-git remote add origin https://gitlab.com/australian-e-health-research-centre/digital-health-strengthening-standards-capability/core-website.git
-git branch -M main
-git push -uf origin main
+
+### 2. Configure Environment (Optional)
+
+Copy the example environment file and customize if needed:
+
+```bash
+cd docker
+cp .env.example .env
+# Edit .env to customize ports and settings (optional)
 ```
 
-## Integrate with your tools
+**Default configuration works out-of-the-box for learning purposes.**
 
-* [Set up project integrations](https://gitlab.com/australian-e-health-research-centre/digital-health-strengthening-standards-capability/core-website/-/settings/integrations)
+### 3. Start the Services
 
-## Collaborate with your team
+```bash
+cd docker
+./scripts/start.sh
+```
 
-* [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-* [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-* [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-* [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-* [Set auto-merge](https://docs.gitlab.com/user/project/merge_requests/auto_merge/)
+Or manually with Docker Compose:
 
-## Test and Deploy
+```bash
+docker compose up -d
+```
 
-Use the built-in continuous integration in GitLab.
+Services will be available at:
+- **HAPI FHIR**: http://localhost:8080/fhir
+- **Snowstorm**: http://localhost:8081
+- **SNOMED Browser**: http://localhost:8082
 
-* [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/)
-* [Analyze your code for known vulnerabilities with Static Application Security Testing (SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-* [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-* [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-* [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
+### 4. Verify Setup
 
-***
-
-# Editing this README
-
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thanks to [makeareadme.com](https://www.makeareadme.com/) for this template.
-
-## Suggestions for a good README
-
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
-
-## Name
-Choose a self-explaining name for your project.
-
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
-
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
-
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
-
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
+```bash
+./scripts/smoke-test.sh
+```
 
 ## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
 
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
+### How to Start
 
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
+```bash
+cd docker
+./scripts/start.sh
+```
+
+### How to Load Baseline Data
+
+Load sample FHIR resources:
+
+```bash
+cd docker
+./scripts/load-data.sh
+```
+
+### How to Load Terminology Data
+
+Upload SNOMED CT data to Snowstorm:
+
+```bash
+cd docker
+./scripts/upload-terminology.sh /path/to/snomed-release.zip
+```
+
+### How to Stop
+
+```bash
+cd docker
+./scripts/stop.sh
+```
+
+Or:
+
+```bash
+docker compose down
+```
+
+### How to Reset
+
+To completely reset all data and start fresh:
+
+```bash
+cd docker
+./scripts/reset.sh
+```
+
+Or manually:
+
+```bash
+docker compose down -v
+docker compose up -d
+```
+
+**Note**: HAPI FHIR uses an in-memory database by default, so data resets on container restart.
+
+### Using SMART on FHIR (Optional)
+
+To enable the SMART on FHIR launcher for demonstration:
+
+```bash
+cd docker
+docker compose --profile smart up -d
+```
+
+Access the SMART Launcher at: http://localhost:8083
+
+## Using the Postman Collection
+
+A Postman collection is provided in the `postman/` directory for testing and exploring the FHIR API.
+
+1. Import the collection into Postman
+2. Ensure FHIRLab Core services are running
+3. Use the collection to:
+   - Query FHIR resources
+   - Create test patients
+   - Search SNOMED CT codes
+   - Test various FHIR operations
+
+## Architecture
+
+```
+┌─────────────────────┐
+│   HAPI FHIR R4      │  Port 8080
+│   (FHIR Server)     │
+└─────────────────────┘
+
+┌─────────────────────┐
+│   Snowstorm         │  Port 8081
+│   (Terminology)     │
+└─────────────────────┘
+          ↓
+┌─────────────────────┐
+│   Elasticsearch     │  (Internal)
+└─────────────────────┘
+
+┌─────────────────────┐
+│   SNOMED Browser    │  Port 8082
+└─────────────────────┘
+
+┌─────────────────────┐
+│ SMART Launcher      │  Port 8083 (Optional)
+│ (--profile smart)   │
+└─────────────────────┘
+```
+
+## Configuration
+
+Default settings are optimized for learning and can be customized via `docker/.env`:
+
+- `HAPI_FHIR_PORT` - HAPI FHIR port (default: 8080)
+- `SNOWSTORM_PORT` - Snowstorm port (default: 8081)
+- `SNOMED_BROWSER_PORT` - Browser port (default: 8082)
+- `SMART_LAUNCHER_PORT` - SMART launcher port (default: 8083)
+- `ES_HEAP_SIZE` - Elasticsearch memory (default: 2g)
+- `SNOWSTORM_MAX_HEAP` - Snowstorm memory (default: 2g)
+
+## Documentation
+
+Full documentation is available in the `docs/` directory:
+
+- Getting Started Guide
+- Configuration Options
+- Data Loading Procedures
+- Troubleshooting
+- API Examples
+
+## Success Metric
+
+**FHIRLab Core can be cloned, started, reset, and stopped in their own environment by regional user/teams with basic technical skills, without ongoing DevOps support.**
+
+## Troubleshooting
+
+### Services won't start
+- Check Docker is running: `docker ps`
+- Verify ports are available (8080-8083)
+- Check logs: `docker compose logs`
+
+### Out of memory errors
+- Increase Docker memory allocation to at least 4GB
+- Reduce heap sizes in `.env` file
+
+### Data not persisting
+- HAPI FHIR uses in-memory storage by default (intentional for learning)
+- For persistent storage, see documentation on configuration options
 
 ## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
 
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
+This project is designed for learning and regional deployment. Contributions that maintain simplicity and accessibility are welcome.
 
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
+## Support
 
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
+For questions or issues, please open an issue in the GitLab repository.
 
 ## License
-For open source projects, say how it is licensed.
 
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+[Specify license]
+
+## Authors
+
+Australian e-Health Research Centre - Digital Health Strengthening Standards Capability Team
