@@ -154,6 +154,165 @@ services:
     ports:
       - "${SMART_LAUNCHER_PORT:-8083}:80"
 
+  # ==========================================================================
+  # FormLab (Optional - comprehensive SMART-on-FHIR demonstration)
+  # Based on: https://gitlab.com/australian-e-health-research-centre/form-lab
+  # A complete learning environment with SMART launch, forms, and sample data
+  # Enabled with: docker compose --profile formlab up -d
+  # ==========================================================================
+  
+  # FormLab Homepage - Documentation and entry point
+  formlab-homepage:
+    image: registry.gitlab.com/australian-e-health-research-centre/form-lab/homepage
+    container_name: fhirlab-formlab-homepage
+    profiles:
+      - formlab
+    restart: unless-stopped
+    ports:
+      - "${FORMLAB_PORT:-8084}:80"
+    depends_on:
+      - formlab-launcher-ui
+    networks:
+      - fhirlab
+
+  # FormLab SMART Launcher UI - Web interface for launching SMART apps
+  formlab-launcher-ui:
+    image: ghcr.io/aehrc/smart-ehr-launcher/smart-launcher-v2
+    container_name: fhirlab-formlab-launcher
+    profiles:
+      - formlab
+    restart: unless-stopped
+    ports:
+      - "${FORMLAB_LAUNCHER_PORT:-8085}:80"
+    environment:
+      - VITE_FHIR_SERVER_URL=http://localhost:${FORMLAB_PROXY_PORT:-8086}/v/r4/fhir
+    depends_on:
+      - formlab-proxy
+      - formlab-forms-app
+    networks:
+      - fhirlab
+    configs:
+      - source: formlab-ehr-config
+        target: /usr/share/nginx/html/config.json
+
+  # FormLab SMART Launch Proxy - Handles SMART authentication
+  formlab-proxy:
+    image: aehrc/smart-launcher-v2
+    container_name: fhirlab-formlab-proxy
+    profiles:
+      - formlab
+    restart: unless-stopped
+    ports:
+      - "${FORMLAB_PROXY_PORT:-8086}:80"
+    environment:
+      - FHIR_SERVER_R4=http://formlab-fhir:8080/fhir
+    depends_on:
+      - formlab-fhir
+    networks:
+      - fhirlab
+
+  # FormLab SMART Forms Application - SDC forms management
+  formlab-forms-app:
+    image: ghcr.io/aehrc/smart-forms/smart-forms
+    container_name: fhirlab-formlab-forms
+    profiles:
+      - formlab
+    restart: unless-stopped
+    ports:
+      - "${FORMLAB_FORMS_PORT:-8087}:80"
+    depends_on:
+      - formlab-fhir
+    networks:
+      - fhirlab
+
+  # FormLab HAPI FHIR Server - Dedicated FHIR server for FormLab
+  formlab-fhir:
+    image: hapiproject/hapi:v8.2.0-2
+    container_name: fhirlab-formlab-fhir
+    profiles:
+      - formlab
+    restart: unless-stopped
+    ports:
+      - "${FORMLAB_FHIR_PORT:-8088}:8080"
+    depends_on:
+      - formlab-db
+    networks:
+      - fhirlab
+    configs:
+      - source: formlab-hapi-config
+        target: /app/config/application.yaml
+
+  # FormLab PostgreSQL Database - Persistent storage
+  formlab-db:
+    image: postgres:17
+    container_name: fhirlab-formlab-db
+    profiles:
+      - formlab
+    restart: unless-stopped
+    environment:
+      - POSTGRES_PASSWORD=${FORMLAB_DB_PASSWORD:-admin}
+      - POSTGRES_USER=${FORMLAB_DB_USER:-admin}
+      - POSTGRES_DB=${FORMLAB_DB_NAME:-hapi}
+    volumes:
+      - formlab-db-data:/var/lib/postgresql/data
+    networks:
+      - fhirlab
+
+  # FormLab Sample Data Loader - Initializes FHIR server with examples
+  formlab-samples:
+    image: registry.gitlab.com/australian-e-health-research-centre/form-lab/add-samples
+    container_name: fhirlab-formlab-samples
+    profiles:
+      - formlab
+    depends_on:
+      - formlab-fhir
+    networks:
+      - fhirlab
+
+# ==========================================================================
+# Configuration Files
+# ==========================================================================
+configs:
+  formlab-hapi-config:
+    content: |
+      spring:
+        datasource:
+          url: 'jdbc:postgresql://formlab-db:5432/${FORMLAB_DB_NAME:-hapi}'
+          username: ${FORMLAB_DB_USER:-admin}
+          password: ${FORMLAB_DB_PASSWORD:-admin}
+          driverClassName: org.postgresql.Driver
+        jpa:
+          properties:
+            hibernate.dialect: ca.uhn.fhir.jpa.model.dialect.HapiFhirPostgresDialect
+            hibernate.search.enabled: false
+
+  formlab-ehr-config:
+    content: |
+      {
+        "fhirServerUrl": "http://localhost:${FORMLAB_PROXY_PORT:-8086}/v/r4/fhir",
+        "authRequired": false,
+        "launchParamConfigType": "proxy",
+        "formsServerUrl": "http://localhost:${FORMLAB_PROXY_PORT:-8086}/v/r4/fhir",
+        "appList": [
+          {
+            "appName": "Local SmartForms",
+            "launchUrl": "http://localhost:${FORMLAB_FORMS_PORT:-8087}/launch",
+            "clientId": "a57d90e3-5f69-4b92-aa2e-2992180863c1",
+            "scope": "launch openid fhirUser online_access patient/AllergyIntolerance.cs patient/Condition.cs patient/Encounter.r patient/Immunization.cs patient/Medication.r patient/MedicationStatement.cs patient/Observation.cs patient/Patient.r patient/QuestionnaireResponse.crus user/Practitioner.r launch/questionnaire?role=http://ns.electronichealth.net.au/smart/role/new",
+            "redirectUris": "http://localhost:${FORMLAB_FORMS_PORT:-8087}",
+            "isEmbeddedView": false
+          }
+        ],
+        "defaultApp": {
+          "appName": "Local SmartForms",
+          "launchUrl": "http://localhost:${FORMLAB_FORMS_PORT:-8087}/launch",
+          "clientId": "a57d90e3-5f69-4b92-aa2e-2992180863c1",
+          "scope": "launch openid fhirUser online_access patient/AllergyIntolerance.cs patient/Condition.cs patient/Encounter.r patient/Immunization.cs patient/Medication.r patient/MedicationStatement.cs patient/Observation.cs patient/Patient.r patient/QuestionnaireResponse.crus user/Practitioner.r launch/questionnaire?role=http://ns.electronichealth.net.au/smart/role/new",
+          "redirectUris": "http://localhost:${FORMLAB_FORMS_PORT:-8087}",
+          "isEmbeddedView": false
+        }
+      }
+
 # ==========================================================================
 # Networks
 # ==========================================================================
@@ -170,3 +329,5 @@ networks:
 volumes:
   elastic-data:
     name: fhirlab-elastic-data
+  formlab-db-data:
+    name: fhirlab-formlab-db-data

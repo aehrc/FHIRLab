@@ -30,7 +30,7 @@ cd "$DOCKER_DIR"
 print_status "Stopping FHIRLab Core services..."
 
 # Stop all services (including any profiles)
-docker compose --profile smart down
+docker compose --profile smart --profile formlab down
 
 print_success "All services stopped."
 echo ""

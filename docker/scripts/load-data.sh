@@ -2,6 +2,7 @@
 # FHIRLab Core - Load Example Data Script
 # =======================================
 # Loads example FHIR resources into the HAPI FHIR server.
+# Note: FormLab has its own sample data loaded automatically on startup.
 #
 # Usage:
 #   ./load-data.sh

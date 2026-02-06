@@ -3,6 +3,7 @@
 # ===========================
 # Stops all services and removes all data volumes.
 # WARNING: This will delete all FHIR resources, terminology data, and configurations.
+# This includes FormLab data if FormLab profile was used.
 #
 # Usage:
 #   ./reset.sh          # Interactive - asks for confirmation
@@ -53,6 +54,7 @@ if [[ "$FORCE" != "true" ]]; then
     echo "  - All FHIR resources in HAPI FHIR"
     echo "  - All Elasticsearch/Snowstorm data"
     echo "  - Any uploaded terminology"
+    echo "  - FormLab data (if FormLab was used)"
     echo ""
     read -p "Are you sure you want to continue? (yes/no): " confirm
 
@@ -63,10 +65,11 @@ if [[ "$FORCE" != "true" ]]; then
 fi
 
 print_status "Stopping all services..."
-docker compose --profile smart down 2>/dev/null || true
+docker compose --profile smart --profile formlab down 2>/dev/null || true
 
 print_status "Removing data volumes..."
 docker volume rm fhirlab-elastic-data 2>/dev/null || true
+docker volume rm fhirlab-formlab-db-data 2>/dev/null || true
 
 # Also try to remove any orphaned volumes with the project prefix
 docker volume ls --filter "name=fhirlab" -q | xargs -r docker volume rm 2>/dev/null || true

@@ -11,6 +11,7 @@ FHIRLab Core enables teams to quickly deploy, experiment with, and learn FHIR-ba
 1. **HAPI FHIR (R4)** - Full-featured FHIR server for storing and querying healthcare data
 2. **Snowstorm** - SNOMED CT terminology server (open-source, avoiding licensing issues)
 3. **SMART on FHIR Launcher** (Optional) - Read-only demonstration for learning SMART authentication flows
+4. **FormLab** (Optional) - Comprehensive SMART-on-FHIR demonstration with questionnaires, forms, and sample data
 
 ### Guiding Principle
 
@@ -61,6 +62,7 @@ Services will be available at:
 - **HAPI FHIR**: http://localhost:8080/fhir
 - **Snowstorm**: http://localhost:8081
 - **SNOMED Browser**: http://localhost:8082
+- **FormLab** (if enabled): http://localhost:8084
 
 ### 4. Verify Setup
 
@@ -137,6 +139,27 @@ docker compose --profile smart up -d
 
 Access the SMART Launcher at: http://localhost:8083
 
+### Using FormLab (Optional)
+
+FormLab provides a comprehensive SMART-on-FHIR learning environment with interactive questionnaires, forms management, and sample data. It includes its own HAPI FHIR server, SMART launcher, and forms application.
+
+To enable FormLab:
+
+```bash
+cd docker
+docker compose --profile formlab up -d
+```
+
+Access FormLab at: http://localhost:8084
+
+FormLab includes:
+- **Homepage**: http://localhost:8084 - Documentation and overview
+- **SMART Launcher**: http://localhost:8085 - Interactive SMART launch interface
+- **Forms Application**: http://localhost:8087 - SDC questionnaires and forms
+- **FHIR Server**: http://localhost:8088/fhir - Dedicated FHIR server with sample data
+
+For more details, see the [FormLab documentation](https://gitlab.com/australian-e-health-research-centre/form-lab).
+
 ## Using the Postman Collection
 
 A Postman collection is provided in the `postman/` directory for testing and exploring the FHIR API.
@@ -174,6 +197,17 @@ A Postman collection is provided in the `postman/` directory for testing and exp
 │ SMART Launcher      │  Port 8083 (Optional)
 │ (--profile smart)   │
 └─────────────────────┘
+
+┌─────────────────────────────────────────┐
+│          FormLab Stack                  │
+│      (--profile formlab, Optional)      │
+├─────────────────────────────────────────┤
+│  Homepage         │  Port 8084          │
+│  SMART Launcher   │  Port 8085          │
+│  Forms App        │  Port 8087          │
+│  FHIR Server      │  Port 8088          │
+│  PostgreSQL DB    │  (Internal)         │
+└─────────────────────────────────────────┘
 ```
 
 ## Configuration
@@ -184,6 +218,10 @@ Default settings are optimized for learning and can be customized via `docker/.e
 - `SNOWSTORM_PORT` - Snowstorm port (default: 8081)
 - `SNOMED_BROWSER_PORT` - Browser port (default: 8082)
 - `SMART_LAUNCHER_PORT` - SMART launcher port (default: 8083)
+- `FORMLAB_PORT` - FormLab homepage port (default: 8084)
+- `FORMLAB_LAUNCHER_PORT` - FormLab SMART launcher (default: 8085)
+- `FORMLAB_FORMS_PORT` - FormLab forms app (default: 8087)
+- `FORMLAB_FHIR_PORT` - FormLab FHIR server (default: 8088)
 - `ES_HEAP_SIZE` - Elasticsearch memory (default: 2g)
 - `SNOWSTORM_MAX_HEAP` - Snowstorm memory (default: 2g)
 

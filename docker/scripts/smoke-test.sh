@@ -4,8 +4,9 @@
 # Verifies all FHIRLab Core services are running and responding correctly.
 #
 # Usage:
-#   ./smoke-test.sh          # Test core services
-#   ./smoke-test.sh --smart  # Also test SMART launcher service (separate from HAPI)
+#   ./smoke-test.sh           # Test core services
+#   ./smoke-test.sh --smart   # Also test SMART launcher service (separate from HAPI)
+#   ./smoke-test.sh --formlab # Also test FormLab services
 
 set -e
 
@@ -26,8 +27,11 @@ fi
 
 # Parse arguments
 CHECK_SMART=false
+CHECK_FORMLAB=false
 if [[ "$1" == "--smart" ]]; then
     CHECK_SMART=true
+elif [[ "$1" == "--formlab" ]]; then
+    CHECK_FORMLAB=true
 fi
 
 # Counters
@@ -176,6 +180,40 @@ test_smart_launcher() {
     fi
 }
 
+test_formlab_homepage() {
+    print_test "FormLab Homepage"
+
+    local url="http://localhost:${FORMLAB_PORT:-8084}"
+
+    if curl -sf "$url" > /dev/null 2>&1; then
+        print_pass
+        return 0
+    else
+        print_fail "Not responding at $url"
+        return 1
+    fi
+}
+
+test_formlab_fhir() {
+    print_test "FormLab FHIR Server"
+
+    local url="http://localhost:${FORMLAB_FHIR_PORT:-8088}/fhir/metadata"
+    local response
+
+    response=$(curl -sf "$url" 2>/dev/null) || {
+        print_fail "Not responding at $url"
+        return 1
+    }
+
+    if echo "$response" | grep -q '"resourceType".*"CapabilityStatement"'; then
+        print_pass
+        return 0
+    else
+        print_fail "Invalid response"
+        return 1
+    fi
+}
+
 print_summary() {
     echo ""
     echo -e "${BLUE}========================================${NC}"
@@ -210,6 +248,13 @@ if [[ "$CHECK_SMART" == "true" ]]; then
     echo ""
     echo "SMART Launcher Service (separate from HAPI):"
     test_smart_launcher || true
+fi
+
+if [[ "$CHECK_FORMLAB" == "true" ]]; then
+    echo ""
+    echo "FormLab Services:"
+    test_formlab_homepage || true
+    test_formlab_fhir || true
 fi
 
 print_summary

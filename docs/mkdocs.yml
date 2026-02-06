@@ -50,6 +50,8 @@ nav:
       - Loading Data: guide/data-loading.md
       - Using the API: guide/api-usage.md
       - SNOMED CT Browser: guide/snomed-browser.md
+  - Optional Features:
+      - FormLab (SMART + Forms): formlab.md
   - Reference:
       - Configuration: reference/configuration.md
       - Scripts: reference/scripts.md

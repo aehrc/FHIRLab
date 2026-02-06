@@ -4,8 +4,10 @@
 # Starts all FHIRLab Core services and waits for them to be healthy.
 #
 # Usage:
-#   ./start.sh          # Start core services (HAPI FHIR, Snowstorm)
-#   ./start.sh --smart  # Start with SMART launcher service (separate from HAPI)
+#   ./start.sh           # Start core services (HAPI FHIR, Snowstorm)
+#   ./start.sh --smart   # Start with SMART launcher service (separate from HAPI)
+#   ./start.sh --formlab # Start with FormLab (complete SMART + forms environment)
+#   Profiles can be combined: docker compose --profile smart --profile formlab up -d
 
 set -e
 
@@ -40,6 +42,20 @@ PROFILE=""
 if [[ "$1" == "--smart" ]]; then
     PROFILE="--profile smart"
     print_status "SMART launcher service will be started (separate service)"
+elif [[ "$1" == "--formlab" ]]; then
+    PROFILE="--profile formlab"
+    print_status "FormLab environment will be started (complete SMART + forms stack)"
+elif [[ "$1" == "--help" ]] || [[ "$1" == "-h" ]]; then
+    echo "Usage: $0 [--smart|--formlab]"
+    echo ""
+    echo "Options:"
+    echo "  (none)       Start core services only (HAPI FHIR, Snowstorm)"
+    echo "  --smart      Start with basic SMART launcher"
+    echo "  --formlab    Start with FormLab (SMART + forms demonstration)"
+    echo ""
+    echo "To combine profiles, use docker compose directly:"
+    echo "  docker compose --profile smart --profile formlab up -d"
+    exit 0
 fi
 
 # Change to docker directory
@@ -101,9 +117,25 @@ else
 fi
 
 # Check SMART launcher if enabled
-if [[ -n "$PROFILE" ]]; then
+if [[ "$1" == "--smart" ]]; then
     echo -n "  SMART Launcher (separate service): "
     if wait_for_service "smart-launcher" "http://localhost:${SMART_LAUNCHER_PORT:-8083}" 30; then
+        print_success "Ready"
+    else
+        print_warning "May still be starting..."
+    fi
+fi
+
+# Check FormLab if enabled
+if [[ "$1" == "--formlab" ]]; then
+    echo -n "  FormLab Homepage: "
+    if wait_for_service "formlab-homepage" "http://localhost:${FORMLAB_PORT:-8084}" 30; then
+        print_success "Ready"
+    else
+        print_warning "May still be starting..."
+    fi
+    echo -n "  FormLab FHIR: "
+    if wait_for_service "formlab-fhir" "http://localhost:${FORMLAB_FHIR_PORT:-8088}/fhir/metadata" 60; then
         print_success "Ready"
     else
         print_warning "May still be starting..."
@@ -117,8 +149,12 @@ echo "Service URLs:"
 echo "  HAPI FHIR:       http://localhost:${HAPI_FHIR_PORT:-8080}/fhir"
 echo "  Snowstorm:       http://localhost:${SNOWSTORM_PORT:-8081}"
 echo "  SNOMED Browser:  http://localhost:${SNOMED_BROWSER_PORT:-8082}"
-if [[ -n "$PROFILE" ]]; then
+if [[ "$1" == "--smart" ]]; then
     echo "  SMART Launcher:  http://localhost:${SMART_LAUNCHER_PORT:-8083}"
+fi
+if [[ "$1" == "--formlab" ]]; then
+    echo "  FormLab:         http://localhost:${FORMLAB_PORT:-8084}"
+    echo "  FormLab FHIR:    http://localhost:${FORMLAB_FHIR_PORT:-8088}/fhir"
 fi
 echo ""
 echo "Run './scripts/smoke-test.sh' to verify all services are working."
