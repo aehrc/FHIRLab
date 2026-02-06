@@ -1,0 +1,172 @@
+# FHIRLab Core - Docker Compose Configuration
+# ===========================================
+# A minimal, learning-focused deployment for teams with limited DevOps skills.
+#
+# Upstream References:
+# - HAPI FHIR: https://gitlab.com/australian-e-health-research-centre/akkadakka
+#            https://github.com/hapifhir/hapi-fhir-jpaserver-starter
+# - Snowstorm: https://github.com/IHTSDO/snowstorm-x/blob/master/docker-compose.yml
+#            https://github.com/IHTSDO/snowstorm-x/blob/master/docs/using-docker.md
+#
+# Usage:
+#   Start core services:     docker compose up -d
+#   Start with SMART on FHIR: docker compose --profile smart up -d
+#   Stop services:           docker compose down
+#   Reset all data:          docker compose down -v
+
+services:
+  # ==========================================================================
+  # HAPI FHIR R4 Server
+  # Based on: https://gitlab.com/australian-e-health-research-centre/akkadakka
+  #           https://github.com/hapifhir/hapi-fhir-jpaserver-starter
+  # ==========================================================================
+  hapi-fhir:
+    image: hapiproject/hapi:latest
+    container_name: fhirlab-hapi-fhir
+    restart: unless-stopped
+    ports:
+      - "${HAPI_FHIR_PORT:-8080}:8080"
+    environment:
+      # Server configuration
+      - hapi.fhir.server_address=${HAPI_FHIR_SERVER_ADDRESS:-http://localhost:8080/fhir}
+      - hapi.fhir.fhir_version=R4
+      - hapi.fhir.default_encoding=json
+      - hapi.fhir.default_pretty_print=true
+      # Database: in-memory H2 (data resets on restart - suitable for learning)
+      # For persistent storage, see docs/reference/configuration.md
+      - spring.datasource.url=jdbc:h2:mem:hapi;DB_CLOSE_DELAY=-1
+      - spring.datasource.driverClassName=org.h2.Driver
+      - spring.datasource.username=sa
+      - spring.datasource.password=
+      - spring.jpa.properties.hibernate.dialect=ca.uhn.fhir.jpa.model.dialect.HapiFhirH2Dialect
+      # Performance settings for learning environment
+      - hapi.fhir.bulk_export_enabled=true
+      - hapi.fhir.allow_external_references=true
+      - hapi.fhir.allow_multiple_delete=true
+    networks:
+      - fhirlab
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/fhir/metadata"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 120s
+
+  # ==========================================================================
+  # Elasticsearch for Snowstorm
+  # Based on: https://github.com/IHTSDO/snowstorm-x/blob/master/docker-compose.yml
+  # ==========================================================================
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.11.1
+    container_name: fhirlab-elasticsearch
+    restart: unless-stopped
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - node.name=snowstorm
+      - cluster.name=snowstorm-cluster
+      - "ES_JAVA_OPTS=-Xms${ES_HEAP_SIZE:-2g} -Xmx${ES_HEAP_SIZE:-2g}"
+    volumes:
+      - elastic-data:/usr/share/elasticsearch/data
+    networks:
+      fhirlab:
+        aliases:
+          - es
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9200"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 60s
+    ports:
+      - "${ES_PORT:-127.0.0.1:9200}:9200"
+    mem_reservation: ${ES_MEMORY:-2g}
+
+  # ==========================================================================
+  # Snowstorm - SNOMED CT Terminology Server
+  # Based on: https://github.com/IHTSDO/snowstorm-x/blob/master/docker-compose.yml
+  # Documentation: https://github.com/IHTSDO/snowstorm-x/blob/master/docs/using-docker.md
+  # Note: Uses Snowstorm to avoid SNOMED licensing issues with other servers
+  # ==========================================================================
+  snowstorm:
+    image: snomedinternational/snowstorm:latest
+    container_name: fhirlab-snowstorm
+    restart: unless-stopped
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+    entrypoint: >
+      java -Xms${SNOWSTORM_MIN_HEAP:-1g} -Xmx${SNOWSTORM_MAX_HEAP:-2g}
+      --add-opens java.base/java.lang=ALL-UNNAMED
+      --add-opens=java.base/java.util=ALL-UNNAMED
+      -cp @/app/jib-classpath-file
+      org.snomed.snowstorm.SnowstormApplication
+      --elasticsearch.urls=http://es:9200
+    networks:
+      fhirlab:
+        aliases:
+          - snowstorm
+    ports:
+      - "${SNOWSTORM_PORT:-8081}:8080"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/version"]
+      interval: 30s
+      timeout: 10s
+      retries: 10
+      start_period: 120s
+
+  # ==========================================================================
+  # SNOMED CT Browser (Optional visual interface for Snowstorm)
+  # Based on: https://github.com/IHTSDO/snowstorm-x/blob/master/docker-compose.yml
+  # ==========================================================================
+  snomed-browser:
+    image: snomedinternational/snomedct-browser:latest
+    container_name: fhirlab-snomed-browser
+    restart: unless-stopped
+    depends_on:
+      - snowstorm
+    environment:
+      - API_HOST=http://snowstorm:8080/
+    networks:
+      - fhirlab
+    ports:
+      - "${SNOMED_BROWSER_PORT:-8082}:80"
+
+  # ==========================================================================
+  # SMART Launcher (Optional - separate service for learning/demonstration)
+  # This is a standalone service that connects to HAPI FHIR as an external client.
+  # HAPI FHIR requires NO special configuration or "SMART mode" for this to work.
+  # Enabled with: docker compose --profile smart up -d
+  # ==========================================================================
+  smart-launcher:
+    image: smartonfhir/smart-launcher:latest
+    container_name: fhirlab-smart-launcher
+    profiles:
+      - smart
+    restart: unless-stopped
+    depends_on:
+      - hapi-fhir
+    environment:
+      - FHIR_SERVER_R4=${HAPI_FHIR_SERVER_ADDRESS:-http://hapi-fhir:8080/fhir}
+      - DISABLE_SANDBOX=false
+    networks:
+      - fhirlab
+    ports:
+      - "${SMART_LAUNCHER_PORT:-8083}:80"
+
+# ==========================================================================
+# Networks
+# ==========================================================================
+networks:
+  fhirlab:
+    name: fhirlab-network
+
+# ==========================================================================
+# Volumes - Named volumes for data persistence
+# These persist data between restarts. Use 'docker compose down -v' to remove.
+# Note: HAPI FHIR uses in-memory database by default (data resets on restart).
+#       See docs for persistent storage configuration.
+# ==========================================================================
+volumes:
+  elastic-data:
+    name: fhirlab-elastic-data

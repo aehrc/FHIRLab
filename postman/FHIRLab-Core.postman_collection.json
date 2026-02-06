@@ -1,0 +1,667 @@
+{
+	"info": {
+		"_postman_id": "fhirlab-core-collection",
+		"name": "FHIRLab Core",
+		"description": "Example API requests for FHIRLab Core services including HAPI FHIR R4 and Snowstorm SNOMED CT terminology server. Import the environment file to get started with localhost defaults.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "HAPI FHIR",
+			"item": [
+				{
+					"name": "Server Metadata",
+					"item": [
+						{
+							"name": "Get Server Metadata",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test(\"Response is FHIR CapabilityStatement\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData.resourceType).to.eql(\"CapabilityStatement\");",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/fhir+json"
+									}
+								],
+								"url": {
+									"raw": "{{fhir_base}}/metadata",
+									"host": [
+										"{{fhir_base}}"
+									],
+									"path": [
+										"metadata"
+									]
+								},
+								"description": "Retrieve the server's CapabilityStatement describing supported resources and operations."
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Patient Operations",
+					"item": [
+						{
+							"name": "List Patients",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test(\"Response is FHIR Bundle\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData.resourceType).to.eql(\"Bundle\");",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/fhir+json"
+									}
+								],
+								"url": {
+									"raw": "{{fhir_base}}/Patient",
+									"host": [
+										"{{fhir_base}}"
+									],
+									"path": [
+										"Patient"
+									]
+								},
+								"description": "Retrieve all Patient resources from the server."
+							},
+							"response": []
+						},
+						{
+							"name": "Search Patients by Name",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test(\"Response is FHIR Bundle\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData.resourceType).to.eql(\"Bundle\");",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/fhir+json"
+									}
+								],
+								"url": {
+									"raw": "{{fhir_base}}/Patient?family=Smith",
+									"host": [
+										"{{fhir_base}}"
+									],
+									"path": [
+										"Patient"
+									],
+									"query": [
+										{
+											"key": "family",
+											"value": "Smith",
+											"description": "Search by family (last) name"
+										}
+									]
+								},
+								"description": "Search for patients by family (last) name."
+							},
+							"response": []
+						},
+						{
+							"name": "Get Patient by ID",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test(\"Response is FHIR Patient\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData.resourceType).to.eql(\"Patient\");",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/fhir+json"
+									}
+								],
+								"url": {
+									"raw": "{{fhir_base}}/Patient/123",
+									"host": [
+										"{{fhir_base}}"
+									],
+									"path": [
+										"Patient",
+										"123"
+									]
+								},
+								"description": "Retrieve a specific Patient by ID. Replace '123' with an actual patient ID from your server."
+							},
+							"response": []
+						},
+						{
+							"name": "Create Patient",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 201\", function () {",
+											"    pm.response.to.have.status(201);",
+											"});",
+											"",
+											"pm.test(\"Response is FHIR Patient\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData.resourceType).to.eql(\"Patient\");",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/fhir+json"
+									},
+									{
+										"key": "Accept",
+										"value": "application/fhir+json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"resourceType\": \"Patient\",\n  \"name\": [\n    {\n      \"family\": \"Smith\",\n      \"given\": [\"John\"]\n    }\n  ],\n  \"birthDate\": \"1980-01-15\",\n  \"gender\": \"male\"\n}"
+								},
+								"url": {
+									"raw": "{{fhir_base}}/Patient",
+									"host": [
+										"{{fhir_base}}"
+									],
+									"path": [
+										"Patient"
+									]
+								},
+								"description": "Create a new Patient resource on the server."
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Observation Operations",
+					"item": [
+						{
+							"name": "List Observations",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test(\"Response is FHIR Bundle\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData.resourceType).to.eql(\"Bundle\");",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/fhir+json"
+									}
+								],
+								"url": {
+									"raw": "{{fhir_base}}/Observation",
+									"host": [
+										"{{fhir_base}}"
+									],
+									"path": [
+										"Observation"
+									]
+								},
+								"description": "Retrieve all Observation resources from the server."
+							},
+							"response": []
+						},
+						{
+							"name": "Search Observations by Patient",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test(\"Response is FHIR Bundle\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData.resourceType).to.eql(\"Bundle\");",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/fhir+json"
+									}
+								],
+								"url": {
+									"raw": "{{fhir_base}}/Observation?subject=Patient/123",
+									"host": [
+										"{{fhir_base}}"
+									],
+									"path": [
+										"Observation"
+									],
+									"query": [
+										{
+											"key": "subject",
+											"value": "Patient/123",
+											"description": "Search by patient reference"
+										}
+									]
+								},
+								"description": "Search for observations belonging to a specific patient."
+							},
+							"response": []
+						},
+						{
+							"name": "Search Observations by Code",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test(\"Response is FHIR Bundle\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData.resourceType).to.eql(\"Bundle\");",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/fhir+json"
+									}
+								],
+								"url": {
+									"raw": "{{fhir_base}}/Observation?code=http://loinc.org|55284-4",
+									"host": [
+										"{{fhir_base}}"
+									],
+									"path": [
+										"Observation"
+									],
+									"query": [
+										{
+											"key": "code",
+											"value": "http://loinc.org|55284-4",
+											"description": "Search by LOINC code (Blood Pressure Panel)"
+										}
+									]
+								},
+								"description": "Search for observations by LOINC code. This example uses code 55284-4 (Blood Pressure Panel)."
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Bundle Operations",
+					"item": [
+						{
+							"name": "Transaction Bundle",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test(\"Response is FHIR Bundle\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData.resourceType).to.eql(\"Bundle\");",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/fhir+json"
+									},
+									{
+										"key": "Accept",
+										"value": "application/fhir+json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"resourceType\": \"Bundle\",\n  \"type\": \"transaction\",\n  \"entry\": [\n    {\n      \"resource\": {\n        \"resourceType\": \"Patient\",\n        \"name\": [\n          {\n            \"family\": \"Doe\",\n            \"given\": [\"Jane\"]\n          }\n        ],\n        \"gender\": \"female\",\n        \"birthDate\": \"1990-05-20\"\n      },\n      \"request\": {\n        \"method\": \"POST\",\n        \"url\": \"Patient\"\n      }\n    }\n  ]\n}"
+								},
+								"url": {
+									"raw": "{{fhir_base}}",
+									"host": [
+										"{{fhir_base}}"
+									]
+								},
+								"description": "Submit a transaction bundle to create multiple resources atomically."
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Snowstorm",
+			"item": [
+				{
+					"name": "Version & Health",
+					"item": [
+						{
+							"name": "Get Version Info",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{snowstorm_base}}/version",
+									"host": [
+										"{{snowstorm_base}}"
+									],
+									"path": [
+										"version"
+									]
+								},
+								"description": "Get Snowstorm version information."
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Concept Search",
+					"item": [
+						{
+							"name": "Search Concepts",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{snowstorm_base}}/MAIN/concepts?term=diabetes&limit=10",
+									"host": [
+										"{{snowstorm_base}}"
+									],
+									"path": [
+										"MAIN",
+										"concepts"
+									],
+									"query": [
+										{
+											"key": "term",
+											"value": "diabetes",
+											"description": "Search term"
+										},
+										{
+											"key": "limit",
+											"value": "10",
+											"description": "Maximum number of results"
+										}
+									]
+								},
+								"description": "Search for SNOMED CT concepts by term. This example searches for 'diabetes'."
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Concept Details",
+					"item": [
+						{
+							"name": "Get Concept Details",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{snowstorm_base}}/MAIN/concepts/73211009",
+									"host": [
+										"{{snowstorm_base}}"
+									],
+									"path": [
+										"MAIN",
+										"concepts",
+										"73211009"
+									]
+								},
+								"description": "Get details for a specific SNOMED CT concept. This example uses concept ID 73211009 (Diabetes mellitus)."
+							},
+							"response": []
+						},
+						{
+							"name": "Get Concept Descriptions",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{snowstorm_base}}/MAIN/concepts/73211009/descriptions",
+									"host": [
+										"{{snowstorm_base}}"
+									],
+									"path": [
+										"MAIN",
+										"concepts",
+										"73211009",
+										"descriptions"
+									]
+								},
+								"description": "Get all descriptions (synonyms, fully specified name) for a concept."
+							},
+							"response": []
+						},
+						{
+							"name": "Get Concept Children",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{snowstorm_base}}/MAIN/concepts/73211009/children?form=inferred",
+									"host": [
+										"{{snowstorm_base}}"
+									],
+									"path": [
+										"MAIN",
+										"concepts",
+										"73211009",
+										"children"
+									],
+									"query": [
+										{
+											"key": "form",
+											"value": "inferred",
+											"description": "Relationship form (inferred or stated)"
+										}
+									]
+								},
+								"description": "Get child concepts (sub-types) of a concept using inferred relationships."
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		}
+	]
+}

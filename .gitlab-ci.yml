@@ -1,0 +1,26 @@
+# GitLab CI/CD Pipeline for FHIRLab Core Documentation
+# ======================================================
+# Automatically builds the MkDocs documentation website and archives it as an artifact
+
+stages:
+  - build
+
+build-docs:
+  stage: build
+  image: python:3.11
+  script:
+    # Install dependencies
+    - pip install mkdocs mkdocs-material mkdocs-minify-plugin
+    
+    # Build documentation
+    - cd docs
+    - mkdocs build
+  
+  artifacts:
+    paths:
+      - docs/site
+    expire_in: 30 days
+  
+  # Run on every push
+  rules:
+    - when: always
