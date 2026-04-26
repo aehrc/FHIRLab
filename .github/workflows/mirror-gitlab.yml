@@ -1,0 +1,21 @@
+name: Mirror from GitLab
+
+on:
+  schedule:
+    - cron: '0 2 * * *'  # Daily at 02:00 UTC
+  workflow_dispatch:
+
+jobs:
+  mirror:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Pull from GitLab and push
+        run: |
+          git remote add gitlab https://oauth2:${{ secrets.GITLAB_TOKEN }}@gitlab.com/australian-e-health-research-centre/digital-health-strengthening-standards-capability/core-website.git
+          git fetch gitlab main --tags
+          git merge gitlab/main --ff-only
+          git push origin main --tags
