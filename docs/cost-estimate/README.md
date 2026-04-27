@@ -215,7 +215,7 @@ rec -[hidden]right-> opt
 | **APAC regions** | 8 | 1 (SG) | 1 (SG) | 3–4 |
 | **Architecture** | ARM | ARM | x86 | x86 |
 | **SLA** | None | Standard | Standard | Standard |
-| **Suitable for sandbox** | ✅ | ✅ | ✅ | ✅ (overpriced) |
+| **Suitable for sandbox** | Yes | Yes | Yes | Yes (overpriced) |
 
 **Bottom line**: Oracle Cloud Free Tier at **$0/month** is the recommended choice. Hetzner Singapore at **$8–17/month** is the best paid alternative. The $48/month providers offer no meaningful advantage for this use case.
 
