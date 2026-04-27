@@ -269,6 +269,32 @@ services:
     networks:
       - fhirlab
 
+  # ==========================================================================
+  # FHIR IG Validator (Optional - multi-arch, supports amd64 + arm64)
+  # Based on: https://github.com/hapifhir/org.hl7.fhir.validator-wrapper
+  # Enabled with: docker compose --profile validator up -d
+  # To add custom IGs, see docs/validator.md
+  # ==========================================================================
+  fhir-validator:
+    build: ./validator
+    container_name: fhirlab-fhir-validator
+    profiles:
+      - validator
+    restart: unless-stopped
+    ports:
+      - "${VALIDATOR_PORT:-3500}:3500"
+    volumes:
+      - validator-packages:/home/ktor/.fhir/packages
+    networks:
+      - fhirlab
+    mem_reservation: ${VALIDATOR_MEMORY:-1g}
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:3500/"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+
 # ==========================================================================
 # Configuration Files
 # ==========================================================================
@@ -331,3 +357,5 @@ volumes:
     name: fhirlab-elastic-data
   formlab-db-data:
     name: fhirlab-formlab-db-data
+  validator-packages:
+    name: fhirlab-validator-packages

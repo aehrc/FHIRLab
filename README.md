@@ -12,6 +12,7 @@ FHIRLab Core enables teams to quickly deploy, experiment with, and learn FHIR-ba
 2. **Snowstorm** - SNOMED CT terminology server (open-source, avoiding licensing issues)
 3. **SMART on FHIR Launcher** (Optional) - Read-only demonstration for learning SMART authentication flows
 4. **FormLab** (Optional) - Comprehensive SMART-on-FHIR demonstration with questionnaires, forms, and sample data
+5. **FHIR IG Validator** (Optional) - Validate FHIR resources against Implementation Guides (ARM compatible)
 
 ### Guiding Principle
 
@@ -128,6 +129,19 @@ docker compose up -d
 
 **Note**: HAPI FHIR uses an in-memory database by default, so data resets on container restart.
 
+### Using the FHIR IG Validator (Optional)
+
+To enable the FHIR Implementation Guide Validator:
+
+```bash
+cd docker
+docker compose --profile validator up -d
+```
+
+Access the Validator at: http://localhost:3500
+
+To add custom Implementation Guides and use the REST API, see the [Validator documentation](docs/validator.md).
+
 ### Using SMART on FHIR (Optional)
 
 To enable the SMART on FHIR launcher for demonstration:
@@ -198,6 +212,11 @@ A Postman collection is provided in the `postman/` directory for testing and exp
 │ (--profile smart)   │
 └─────────────────────┘
 
+┌─────────────────────┐
+│ FHIR IG Validator   │  Port 3500 (Optional)
+│ (--profile validator)│
+└─────────────────────┘
+
 ┌─────────────────────────────────────────┐
 │          FormLab Stack                  │
 │      (--profile formlab, Optional)      │
@@ -218,6 +237,7 @@ Default settings are optimized for learning and can be customized via `docker/.e
 - `SNOWSTORM_PORT` - Snowstorm port (default: 8081)
 - `SNOMED_BROWSER_PORT` - Browser port (default: 8082)
 - `SMART_LAUNCHER_PORT` - SMART launcher port (default: 8083)
+- `VALIDATOR_PORT` - FHIR IG Validator port (default: 3500)
 - `FORMLAB_PORT` - FormLab homepage port (default: 8084)
 - `FORMLAB_LAUNCHER_PORT` - FormLab SMART launcher (default: 8085)
 - `FORMLAB_FORMS_PORT` - FormLab forms app (default: 8087)
