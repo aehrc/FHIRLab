@@ -1,9 +1,6 @@
 # GitLab CI/CD Pipeline for FHIRLab Core Documentation
 # ======================================================
-# Builds the MkDocs documentation and deploys it to GitHub Pages (fhirlab/core gh-pages branch).
-#
-# Required GitLab CI variable (Settings → CI/CD → Variables):
-#   GITHUB_DEPLOY_TOKEN  — GitHub PAT with `contents: write` on fhirlab/core (mark as masked+protected)
+# Builds the MkDocs documentation and publishes it to GitLab Pages.
 
 stages:
   - build
@@ -23,20 +20,17 @@ build-docs:
   rules:
     - when: always
 
-deploy-gh-pages:
+pages:
   stage: deploy
-  image: alpine/git:latest
+  image: busybox
   needs:
     - build-docs
   variables:
     GIT_STRATEGY: none
   script:
-    - git config --global user.email "ci@gitlab.com"
-    - git config --global user.name "GitLab CI"
-    - cd docs/site
-    - git init
-    - git add -A
-    - git commit -m "Deploy docs [${CI_COMMIT_SHORT_SHA}]"
-    - git push --force "https://oauth2:${GITHUB_DEPLOY_TOKEN}@github.com/fhirlab/core.git" HEAD:gh-pages
+    - cp -r docs/site public
+  artifacts:
+    paths:
+      - public
   rules:
     - if: $CI_COMMIT_BRANCH == "main"
