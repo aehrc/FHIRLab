@@ -1,0 +1,603 @@
+{
+  "info": {
+    "name": "FHIRLab Learning Activities",
+    "description": "Eight FHIR R4 transaction bundles for hands-on learning with HAPI FHIR and Ontoserver.\n\nAll bundles use idempotent PUT requests with stable logical IDs. Load them in order (01–08), then explore the data using the Query HAPI folder, and exercise the SNOMED terminology server using the Ontoserver Exercises folder.\n\nSources: HL7 IPS IG (Apache 2.0), chronic-care/sample-data (MITRE, Apache 2.0), WHO SMART Immunizations (Apache 2.0).",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "01 – Load Bundles",
+      "description": "Submit each FHIR transaction bundle to HAPI FHIR. Run in order 01→08. All requests are idempotent (PUT) — safe to re-run.",
+      "item": [
+        {
+          "name": "01 – Patient Registration",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Response is Bundle\", () => {",
+                  "    pm.expect(pm.response.json().resourceType).to.eql(\"Bundle\");",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/fhir+json" },
+              { "key": "Accept", "value": "application/fhir+json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{{bundle_01}}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": { "raw": "{{fhir_base}}", "host": ["{{fhir_base}}"] },
+            "description": "Creates patient Maria Santos (MRN-12345). Teaches: Patient resource structure, identifiers, human names, telecom, address, language.\n\nSource: Adapted from HL7 IPS patient pattern."
+          },
+          "response": []
+        },
+        {
+          "name": "02 – Vital Signs",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Response is Bundle\", () => {",
+                  "    pm.expect(pm.response.json().resourceType).to.eql(\"Bundle\");",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/fhir+json" },
+              { "key": "Accept", "value": "application/fhir+json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{{bundle_02}}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": { "raw": "{{fhir_base}}", "host": ["{{fhir_base}}"] },
+            "description": "Adds BP (138/88), heart rate (82 bpm), O2 saturation (98%), temperature (37.2°C), weight (68kg).\n\nTeaches: Observation resources, vital-signs category, LOINC coding, component observations (BP panel), quantity values with UCUM units.\n\nKey LOINC codes: 85354-9 (BP panel), 8867-4 (HR), 59408-5 (SpO2), 8310-5 (temp), 29463-7 (weight).\n\nSource: LOINC codes from HL7 IPS all-sections bundle and FHIR R4 vital signs profile."
+          },
+          "response": []
+        },
+        {
+          "name": "03 – Chronic Conditions",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Response is Bundle\", () => {",
+                  "    pm.expect(pm.response.json().resourceType).to.eql(\"Bundle\");",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/fhir+json" },
+              { "key": "Accept", "value": "application/fhir+json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{{bundle_03}}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": { "raw": "{{fhir_base}}", "host": ["{{fhir_base}}"] },
+            "description": "Records Type 2 Diabetes Mellitus (since 2018) and Essential Hypertension (since 2020).\n\nTeaches: Condition resources, clinicalStatus, verificationStatus, problem-list-item category, SNOMED CT coding, onset dates.\n\nKey SNOMED codes:\n- 44054006 | Type 2 diabetes mellitus (disorder)\n- 59621000 | Essential hypertension (disorder)\n\nOntoserver exercise: after loading, use $validate-code to confirm these codes against the SNOMED CT International Edition ValueSet.\n\nSource: SNOMED codes from chronic-care/sample-data (MITRE); HTN code from HL7 IPS all-sections bundle."
+          },
+          "response": []
+        },
+        {
+          "name": "04 – Allergy Records",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Response is Bundle\", () => {",
+                  "    pm.expect(pm.response.json().resourceType).to.eql(\"Bundle\");",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/fhir+json" },
+              { "key": "Accept", "value": "application/fhir+json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{{bundle_04}}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": { "raw": "{{fhir_base}}", "host": ["{{fhir_base}}"] },
+            "description": "Records penicillin allergy (skin rash, high criticality) and aspirin intolerance (throat tightness, low criticality).\n\nTeaches: AllergyIntolerance resources, allergy vs intolerance, criticality, reaction manifestations, severity.\n\nKey SNOMED codes:\n- 764146007 | Substance with penicillin structure (substance)\n- 372687004 | Aspirin (substance)\n- 271807003 | Eruption of skin (manifestation)\n\nSource: Penicillin allergy structure adapted from HL7 IPS minimal bundle."
+          },
+          "response": []
+        },
+        {
+          "name": "05 – Immunization History",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Response is Bundle\", () => {",
+                  "    pm.expect(pm.response.json().resourceType).to.eql(\"Bundle\");",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/fhir+json" },
+              { "key": "Accept", "value": "application/fhir+json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{{bundle_05}}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": { "raw": "{{fhir_base}}", "host": ["{{fhir_base}}"] },
+            "description": "Records COVID-19 (dose 2/2, July 2021), seasonal influenza (April 2025), and Td booster (November 2022).\n\nTeaches: Immunization resources, vaccineCode, protocolApplied, doseNumber, site, route.\n\nKey SNOMED codes:\n- 1119305005 | COVID-19 antigen vaccine (product)\n- 840539006 | Disease caused by SARS-CoV-2 (disorder)\n- 76902006 | Tetanus (disorder)\n\nSource: Immunization structure and COVID-19 SNOMED codes from WHO SMART Immunizations IG (v1.0.0, April 2026)."
+          },
+          "response": []
+        },
+        {
+          "name": "06 – Lab Results",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Response is Bundle\", () => {",
+                  "    pm.expect(pm.response.json().resourceType).to.eql(\"Bundle\");",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/fhir+json" },
+              { "key": "Accept", "value": "application/fhir+json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{{bundle_06}}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": { "raw": "{{fhir_base}}", "host": ["{{fhir_base}}"] },
+            "description": "Records HbA1c 7.8% (high), fasting glucose 8.4 mmol/L (high), serum creatinine 82 µmol/L (normal).\n\nTeaches: Laboratory Observation category, LOINC codes, valueQuantity with UCUM units, interpretation (H/N/L), referenceRange.\n\nKey codes:\n- LOINC 59261-8 | HbA1c (IFCC protocol)\n- SNOMED 43396009 | HbA1c measurement (procedure)\n- LOINC 14743-9 | Glucose (capillary glucometer)\n- LOINC 2160-0 | Creatinine (serum)\n\nSource: HbA1c observation structure from HL7 IPS bundle-01; creatinine rationale from chronic-care/sample-data CKD patient."
+          },
+          "response": []
+        },
+        {
+          "name": "07 – Medication Plan",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Response is Bundle\", () => {",
+                  "    pm.expect(pm.response.json().resourceType).to.eql(\"Bundle\");",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/fhir+json" },
+              { "key": "Accept", "value": "application/fhir+json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{{bundle_07}}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": { "raw": "{{fhir_base}}", "host": ["{{fhir_base}}"] },
+            "description": "Prescribes Metformin 500mg BD (for T2DM) and Amlodipine 5mg daily (for HTN).\n\nTeaches: MedicationRequest, medicationCodeableConcept, dosageInstruction, timing, doseAndRate, dispenseRequest, reasonReference linking to a Condition.\n\nKey SNOMED substance codes:\n- 372567009 | Metformin (substance)\n- 386864001 | Amlodipine (substance)\n- 26643006 | Oral route (qualifier value)"
+          },
+          "response": []
+        },
+        {
+          "name": "08 – Full Encounter",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Response is Bundle\", () => {",
+                  "    pm.expect(pm.response.json().resourceType).to.eql(\"Bundle\");",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/fhir+json" },
+              { "key": "Accept", "value": "application/fhir+json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{{bundle_08}}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": { "raw": "{{fhir_base}}", "host": ["{{fhir_base}}"] },
+            "description": "A complete outpatient diabetes annual review encounter: Encounter links to Patient, Practitioner, 2 Conditions (T2DM + HTN as CC/comorbidity), BP observation, HbA1c, and a metformin prescription — all tied together via encounter context.\n\nTeaches: How FHIR resources reference each other within an encounter context; Encounter.diagnosis, Encounter.participant, Observation.encounter, Condition.encounter, MedicationRequest.encounter."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "02 – Query HAPI",
+      "description": "Verify that the bundles loaded correctly by querying HAPI FHIR for the created resources.",
+      "item": [
+        {
+          "name": "Get Patient Maria Santos",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/fhir+json" }],
+            "url": {
+              "raw": "{{fhir_base}}/Patient/patient-maria-santos",
+              "host": ["{{fhir_base}}"],
+              "path": ["Patient", "patient-maria-santos"]
+            },
+            "description": "Fetch the patient resource directly by logical ID."
+          },
+          "response": []
+        },
+        {
+          "name": "Search Patient by Family Name",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/fhir+json" }],
+            "url": {
+              "raw": "{{fhir_base}}/Patient?family=Santos",
+              "host": ["{{fhir_base}}"],
+              "path": ["Patient"],
+              "query": [{ "key": "family", "value": "Santos" }]
+            },
+            "description": "Search by family name. Returns a searchset Bundle."
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Conditions for Patient",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/fhir+json" }],
+            "url": {
+              "raw": "{{fhir_base}}/Condition?patient=patient-maria-santos",
+              "host": ["{{fhir_base}}"],
+              "path": ["Condition"],
+              "query": [{ "key": "patient", "value": "patient-maria-santos" }]
+            },
+            "description": "Retrieve all Conditions for the patient. Expect T2DM and HTN."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Vital Signs Observations",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/fhir+json" }],
+            "url": {
+              "raw": "{{fhir_base}}/Observation?patient=patient-maria-santos&category=vital-signs",
+              "host": ["{{fhir_base}}"],
+              "path": ["Observation"],
+              "query": [
+                { "key": "patient", "value": "patient-maria-santos" },
+                { "key": "category", "value": "vital-signs" }
+              ]
+            },
+            "description": "Retrieve vital signs observations only."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Lab Results",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/fhir+json" }],
+            "url": {
+              "raw": "{{fhir_base}}/Observation?patient=patient-maria-santos&category=laboratory",
+              "host": ["{{fhir_base}}"],
+              "path": ["Observation"],
+              "query": [
+                { "key": "patient", "value": "patient-maria-santos" },
+                { "key": "category", "value": "laboratory" }
+              ]
+            },
+            "description": "Retrieve laboratory observations (HbA1c, glucose, creatinine)."
+          },
+          "response": []
+        },
+        {
+          "name": "Get HbA1c by LOINC Code",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/fhir+json" }],
+            "url": {
+              "raw": "{{fhir_base}}/Observation?patient=patient-maria-santos&code=http://loinc.org|59261-8",
+              "host": ["{{fhir_base}}"],
+              "path": ["Observation"],
+              "query": [
+                { "key": "patient", "value": "patient-maria-santos" },
+                { "key": "code", "value": "http://loinc.org|59261-8" }
+              ]
+            },
+            "description": "Fetch HbA1c specifically by LOINC code."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Medications for Patient",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/fhir+json" }],
+            "url": {
+              "raw": "{{fhir_base}}/MedicationRequest?patient=patient-maria-santos&status=active",
+              "host": ["{{fhir_base}}"],
+              "path": ["MedicationRequest"],
+              "query": [
+                { "key": "patient", "value": "patient-maria-santos" },
+                { "key": "status", "value": "active" }
+              ]
+            },
+            "description": "Retrieve active medication requests."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Encounter with Everything ($everything)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/fhir+json" }],
+            "url": {
+              "raw": "{{fhir_base}}/Patient/patient-maria-santos/$everything",
+              "host": ["{{fhir_base}}"],
+              "path": ["Patient", "patient-maria-santos", "$everything"]
+            },
+            "description": "The $everything operation returns all resources associated with the patient in a single Bundle."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "03 – Ontoserver Exercises",
+      "description": "Explore SNOMED CT terminology using Ontoserver (Snowstorm). These exercises complement the HAPI bundles — use the SNOMED codes from the clinical bundles here.\n\nBase URL: {{snowstorm_base}}",
+      "item": [
+        {
+          "name": "Lookup T2DM Concept (44054006)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/fhir+json" }],
+            "url": {
+              "raw": "{{snowstorm_base}}/fhir/CodeSystem/$lookup?system=http://snomed.info/sct&code=44054006",
+              "host": ["{{snowstorm_base}}"],
+              "path": ["fhir", "CodeSystem", "$lookup"],
+              "query": [
+                { "key": "system", "value": "http://snomed.info/sct" },
+                { "key": "code", "value": "44054006" }
+              ]
+            },
+            "description": "Resolve SNOMED code 44054006 (Type 2 diabetes mellitus) to its full definition including display, designations, and properties."
+          },
+          "response": []
+        },
+        {
+          "name": "Lookup Essential Hypertension (59621000)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/fhir+json" }],
+            "url": {
+              "raw": "{{snowstorm_base}}/fhir/CodeSystem/$lookup?system=http://snomed.info/sct&code=59621000",
+              "host": ["{{snowstorm_base}}"],
+              "path": ["fhir", "CodeSystem", "$lookup"],
+              "query": [
+                { "key": "system", "value": "http://snomed.info/sct" },
+                { "key": "code", "value": "59621000" }
+              ]
+            },
+            "description": "Resolve SNOMED code 59621000 (Essential hypertension)."
+          },
+          "response": []
+        },
+        {
+          "name": "Validate T2DM Code ($validate-code)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/fhir+json" }],
+            "url": {
+              "raw": "{{snowstorm_base}}/fhir/ValueSet/$validate-code?url=http://snomed.info/sct?fhir_vs&system=http://snomed.info/sct&code=44054006",
+              "host": ["{{snowstorm_base}}"],
+              "path": ["fhir", "ValueSet", "$validate-code"],
+              "query": [
+                { "key": "url", "value": "http://snomed.info/sct?fhir_vs" },
+                { "key": "system", "value": "http://snomed.info/sct" },
+                { "key": "code", "value": "44054006" }
+              ]
+            },
+            "description": "Validate that 44054006 is a valid SNOMED CT code. Returns result=true if valid."
+          },
+          "response": []
+        },
+        {
+          "name": "Search SNOMED – Diabetes",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/fhir+json" }],
+            "url": {
+              "raw": "{{snowstorm_base}}/fhir/ValueSet/$expand?url=http://snomed.info/sct?fhir_vs&filter=diabetes&count=10",
+              "host": ["{{snowstorm_base}}"],
+              "path": ["fhir", "ValueSet", "$expand"],
+              "query": [
+                { "key": "url", "value": "http://snomed.info/sct?fhir_vs" },
+                { "key": "filter", "value": "diabetes" },
+                { "key": "count", "value": "10" }
+              ]
+            },
+            "description": "Full-text search for 'diabetes' concepts across SNOMED CT. Returns a ValueSet with matching concepts."
+          },
+          "response": []
+        },
+        {
+          "name": "Search SNOMED – Hypertension",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/fhir+json" }],
+            "url": {
+              "raw": "{{snowstorm_base}}/fhir/ValueSet/$expand?url=http://snomed.info/sct?fhir_vs&filter=hypertension&count=10",
+              "host": ["{{snowstorm_base}}"],
+              "path": ["fhir", "ValueSet", "$expand"],
+              "query": [
+                { "key": "url", "value": "http://snomed.info/sct?fhir_vs" },
+                { "key": "filter", "value": "hypertension" },
+                { "key": "count", "value": "10" }
+              ]
+            },
+            "description": "Search for 'hypertension' concepts. Compare Essential hypertension (59621000) vs. other subtypes."
+          },
+          "response": []
+        },
+        {
+          "name": "Subsumption – Is T2DM a type of Diabetes? ($subsumes)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/fhir+json" }],
+            "url": {
+              "raw": "{{snowstorm_base}}/fhir/CodeSystem/$subsumes?system=http://snomed.info/sct&codeA=73211009&codeB=44054006",
+              "host": ["{{snowstorm_base}}"],
+              "path": ["fhir", "CodeSystem", "$subsumes"],
+              "query": [
+                { "key": "system", "value": "http://snomed.info/sct" },
+                { "key": "codeA", "value": "73211009" },
+                { "key": "codeB", "value": "44054006" }
+              ]
+            },
+            "description": "Tests whether Diabetes mellitus (73211009) subsumes T2DM (44054006) — i.e. is T2DM a subtype of diabetes? Expect outcome=subsumes."
+          },
+          "response": []
+        },
+        {
+          "name": "Expand ValueSet – Disorders of glucose metabolism",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/fhir+json" }],
+            "url": {
+              "raw": "{{snowstorm_base}}/fhir/ValueSet/$expand?url=http://snomed.info/sct?fhir_vs=isa/75524006&count=20",
+              "host": ["{{snowstorm_base}}"],
+              "path": ["fhir", "ValueSet", "$expand"],
+              "query": [
+                { "key": "url", "value": "http://snomed.info/sct?fhir_vs=isa/75524006" },
+                { "key": "count", "value": "20" }
+              ]
+            },
+            "description": "Expand all descendants of 'Disorder of carbohydrate metabolism' (75524006) to see all related diabetes and metabolic disorder concepts."
+          },
+          "response": []
+        },
+        {
+          "name": "Lookup Penicillin Substance (764146007)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/fhir+json" }],
+            "url": {
+              "raw": "{{snowstorm_base}}/fhir/CodeSystem/$lookup?system=http://snomed.info/sct&code=764146007",
+              "host": ["{{snowstorm_base}}"],
+              "path": ["fhir", "CodeSystem", "$lookup"],
+              "query": [
+                { "key": "system", "value": "http://snomed.info/sct" },
+                { "key": "code", "value": "764146007" }
+              ]
+            },
+            "description": "Resolve the penicillin substance code used in the allergy bundle. Explore its properties including the substance hierarchy."
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "bundle_01",
+      "value": "",
+      "description": "Paste contents of bundles/01-patient-registration.json here, or load via pre-request script"
+    },
+    {
+      "key": "bundle_02",
+      "value": "",
+      "description": "Paste contents of bundles/02-vital-signs.json"
+    },
+    {
+      "key": "bundle_03",
+      "value": "",
+      "description": "Paste contents of bundles/03-chronic-conditions.json"
+    },
+    {
+      "key": "bundle_04",
+      "value": "",
+      "description": "Paste contents of bundles/04-allergy-records.json"
+    },
+    {
+      "key": "bundle_05",
+      "value": "",
+      "description": "Paste contents of bundles/05-immunization-history.json"
+    },
+    {
+      "key": "bundle_06",
+      "value": "",
+      "description": "Paste contents of bundles/06-lab-results.json"
+    },
+    {
+      "key": "bundle_07",
+      "value": "",
+      "description": "Paste contents of bundles/07-medication-plan.json"
+    },
+    {
+      "key": "bundle_08",
+      "value": "",
+      "description": "Paste contents of bundles/08-full-encounter.json"
+    }
+  ]
+}

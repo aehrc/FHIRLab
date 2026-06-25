@@ -2,6 +2,33 @@
 
 Expand your FHIR and healthcare interoperability knowledge.
 
+## Hands-On Learning Activities
+
+FHIRLab ships with eight ready-to-run FHIR R4 transaction bundles covering a complete clinical scenario for a fictional patient (Maria Santos). Load them in order to build up a realistic dataset, then query HAPI and exercise Ontoserver.
+
+**Import the collection:** `postman/learning/FHIRLab-Learning.postman_collection.json`
+
+| # | Bundle | What you learn |
+|---|--------|----------------|
+| 01 | Patient Registration | Patient demographics, identifiers, language |
+| 02 | Vital Signs | Observation, LOINC vital signs codes, UCUM units, BP components |
+| 03 | Chronic Conditions | Condition, SNOMED CT (T2DM 44054006, HTN 59621000), clinicalStatus |
+| 04 | Allergy Records | AllergyIntolerance, substance coding, criticality, reactions |
+| 05 | Immunization History | Immunization, vaccine/disease SNOMED codes, protocolApplied |
+| 06 | Lab Results | Laboratory Observations, LOINC + SNOMED dual-coding, referenceRange |
+| 07 | Medication Plan | MedicationRequest, SNOMED substance codes, dosageInstruction |
+| 08 | Full Encounter | Linking Patient, Practitioner, Encounter, Conditions, Observations, Medications |
+
+After loading all bundles, the **Ontoserver Exercises** folder in the Postman collection walks through:
+
+- `$lookup` — resolve a SNOMED code to its full definition
+- `$validate-code` — confirm a code is valid in a ValueSet
+- `$expand` — enumerate all concepts in a ValueSet
+- `$subsumes` — test subsumption (is T2DM a subtype of Diabetes mellitus?)
+- Full-text concept search
+
+See `postman/learning/README.md` for bundle details, source attribution, and all SNOMED/LOINC codes used.
+
 ## FHIR Fundamentals
 
 ### Official Resources

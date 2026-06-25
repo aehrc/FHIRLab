@@ -1,0 +1,77 @@
+{
+  "resourceType": "Bundle",
+  "id": "bundle-01-patient-registration",
+  "type": "transaction",
+  "entry": [
+    {
+      "fullUrl": "http://localhost:8080/fhir/Patient/patient-maria-santos",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "patient-maria-santos",
+        "text": {
+          "status": "generated",
+          "div": "<div xmlns='http://www.w3.org/1999/xhtml'>Maria Santos, female, born 1979-03-15</div>"
+        },
+        "identifier": [
+          {
+            "use": "usual",
+            "type": {
+              "coding": [
+                {
+                  "system": "http://terminology.hl7.org/CodeSystem/v2-0203",
+                  "code": "MR",
+                  "display": "Medical Record Number"
+                }
+              ]
+            },
+            "system": "http://example.org/fhirlab/mrn",
+            "value": "MRN-12345"
+          }
+        ],
+        "active": true,
+        "name": [
+          {
+            "use": "official",
+            "family": "Santos",
+            "given": ["Maria", "Rosa"]
+          }
+        ],
+        "telecom": [
+          {
+            "system": "phone",
+            "value": "+63-912-345-6789",
+            "use": "mobile"
+          }
+        ],
+        "gender": "female",
+        "birthDate": "1979-03-15",
+        "address": [
+          {
+            "use": "home",
+            "line": ["123 Rizal Street"],
+            "city": "Quezon City",
+            "country": "PH"
+          }
+        ],
+        "communication": [
+          {
+            "language": {
+              "coding": [
+                {
+                  "system": "urn:ietf:bcp:47",
+                  "code": "fil",
+                  "display": "Filipino"
+                }
+              ]
+            },
+            "preferred": true
+          }
+        ]
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/patient-maria-santos"
+      }
+    }
+  ]
+}

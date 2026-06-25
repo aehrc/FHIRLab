@@ -1,0 +1,190 @@
+{
+  "resourceType": "Bundle",
+  "id": "bundle-06-lab-results",
+  "type": "transaction",
+  "entry": [
+    {
+      "fullUrl": "http://localhost:8080/fhir/Patient/patient-maria-santos",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "patient-maria-santos",
+        "name": [{ "family": "Santos", "given": ["Maria"] }],
+        "gender": "female",
+        "birthDate": "1979-03-15"
+      },
+      "request": { "method": "PUT", "url": "Patient/patient-maria-santos" }
+    },
+    {
+      "fullUrl": "http://localhost:8080/fhir/Observation/obs-hba1c-001",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "obs-hba1c-001",
+        "status": "final",
+        "category": [
+          {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                "code": "laboratory",
+                "display": "Laboratory"
+              }
+            ]
+          }
+        ],
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "59261-8",
+              "display": "Hemoglobin A1c/Hemoglobin.total in Blood by IFCC protocol"
+            },
+            {
+              "system": "http://snomed.info/sct",
+              "code": "43396009",
+              "display": "Haemoglobin A1c measurement (procedure)"
+            }
+          ],
+          "text": "HbA1c"
+        },
+        "subject": { "reference": "Patient/patient-maria-santos" },
+        "effectiveDateTime": "2026-06-20T07:30:00+08:00",
+        "valueQuantity": {
+          "value": 7.8,
+          "unit": "%",
+          "system": "http://unitsofmeasure.org",
+          "code": "%"
+        },
+        "interpretation": [
+          {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation",
+                "code": "H",
+                "display": "High"
+              }
+            ]
+          }
+        ],
+        "referenceRange": [
+          {
+            "low": { "value": 4.0, "unit": "%", "system": "http://unitsofmeasure.org", "code": "%" },
+            "high": { "value": 6.5, "unit": "%", "system": "http://unitsofmeasure.org", "code": "%" },
+            "text": "Normal: 4.0 – 6.5%"
+          }
+        ]
+      },
+      "request": { "method": "PUT", "url": "Observation/obs-hba1c-001" }
+    },
+    {
+      "fullUrl": "http://localhost:8080/fhir/Observation/obs-glucose-001",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "obs-glucose-001",
+        "status": "final",
+        "category": [
+          {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                "code": "laboratory",
+                "display": "Laboratory"
+              }
+            ]
+          }
+        ],
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "14743-9",
+              "display": "Glucose [Moles/volume] in Capillary blood by Glucometer"
+            }
+          ],
+          "text": "Fasting blood glucose"
+        },
+        "subject": { "reference": "Patient/patient-maria-santos" },
+        "effectiveDateTime": "2026-06-20T07:30:00+08:00",
+        "valueQuantity": {
+          "value": 8.4,
+          "unit": "mmol/L",
+          "system": "http://unitsofmeasure.org",
+          "code": "mmol/L"
+        },
+        "interpretation": [
+          {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation",
+                "code": "H",
+                "display": "High"
+              }
+            ]
+          }
+        ],
+        "referenceRange": [
+          {
+            "high": { "value": 6.1, "unit": "mmol/L", "system": "http://unitsofmeasure.org", "code": "mmol/L" },
+            "text": "Fasting normal: < 6.1 mmol/L"
+          }
+        ]
+      },
+      "request": { "method": "PUT", "url": "Observation/obs-glucose-001" }
+    },
+    {
+      "fullUrl": "http://localhost:8080/fhir/Observation/obs-creatinine-001",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "obs-creatinine-001",
+        "status": "final",
+        "category": [
+          {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                "code": "laboratory",
+                "display": "Laboratory"
+              }
+            ]
+          }
+        ],
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "2160-0",
+              "display": "Creatinine [Mass/volume] in Serum or Plasma"
+            }
+          ],
+          "text": "Serum creatinine"
+        },
+        "subject": { "reference": "Patient/patient-maria-santos" },
+        "effectiveDateTime": "2026-06-20T07:30:00+08:00",
+        "valueQuantity": {
+          "value": 82,
+          "unit": "umol/L",
+          "system": "http://unitsofmeasure.org",
+          "code": "umol/L"
+        },
+        "interpretation": [
+          {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation",
+                "code": "N",
+                "display": "Normal"
+              }
+            ]
+          }
+        ],
+        "referenceRange": [
+          {
+            "low": { "value": 45, "unit": "umol/L", "system": "http://unitsofmeasure.org", "code": "umol/L" },
+            "high": { "value": 90, "unit": "umol/L", "system": "http://unitsofmeasure.org", "code": "umol/L" },
+            "text": "Female normal: 45 – 90 µmol/L"
+          }
+        ]
+      },
+      "request": { "method": "PUT", "url": "Observation/obs-creatinine-001" }
+    }
+  ]
+}

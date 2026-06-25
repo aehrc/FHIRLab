@@ -1,0 +1,143 @@
+{
+  "resourceType": "Bundle",
+  "id": "bundle-04-allergy-records",
+  "type": "transaction",
+  "entry": [
+    {
+      "fullUrl": "http://localhost:8080/fhir/Patient/patient-maria-santos",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "patient-maria-santos",
+        "name": [{ "family": "Santos", "given": ["Maria"] }],
+        "gender": "female",
+        "birthDate": "1979-03-15"
+      },
+      "request": { "method": "PUT", "url": "Patient/patient-maria-santos" }
+    },
+    {
+      "fullUrl": "http://localhost:8080/fhir/AllergyIntolerance/allergy-penicillin-001",
+      "resource": {
+        "resourceType": "AllergyIntolerance",
+        "id": "allergy-penicillin-001",
+        "clinicalStatus": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/allergyintolerance-clinical",
+              "code": "active",
+              "display": "Active"
+            }
+          ]
+        },
+        "verificationStatus": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/allergyintolerance-verification",
+              "code": "confirmed",
+              "display": "Confirmed"
+            }
+          ]
+        },
+        "type": "allergy",
+        "category": ["medication"],
+        "criticality": "high",
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "764146007",
+              "display": "Substance with penicillin structure and pharmacological action (substance)"
+            }
+          ],
+          "text": "Penicillin"
+        },
+        "patient": { "reference": "Patient/patient-maria-santos" },
+        "onsetDateTime": "2005-01-01",
+        "reaction": [
+          {
+            "substance": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "764146007",
+                  "display": "Substance with penicillin structure and pharmacological action (substance)"
+                }
+              ]
+            },
+            "manifestation": [
+              {
+                "coding": [
+                  {
+                    "system": "http://snomed.info/sct",
+                    "code": "271807003",
+                    "display": "Eruption of skin (disorder)"
+                  }
+                ],
+                "text": "Skin rash"
+              }
+            ],
+            "severity": "moderate"
+          }
+        ]
+      },
+      "request": { "method": "PUT", "url": "AllergyIntolerance/allergy-penicillin-001" }
+    },
+    {
+      "fullUrl": "http://localhost:8080/fhir/AllergyIntolerance/allergy-nsaid-001",
+      "resource": {
+        "resourceType": "AllergyIntolerance",
+        "id": "allergy-nsaid-001",
+        "clinicalStatus": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/allergyintolerance-clinical",
+              "code": "active",
+              "display": "Active"
+            }
+          ]
+        },
+        "verificationStatus": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/allergyintolerance-verification",
+              "code": "confirmed",
+              "display": "Confirmed"
+            }
+          ]
+        },
+        "type": "intolerance",
+        "category": ["medication"],
+        "criticality": "low",
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "372687004",
+              "display": "Aspirin (substance)"
+            }
+          ],
+          "text": "Aspirin / NSAIDs"
+        },
+        "patient": { "reference": "Patient/patient-maria-santos" },
+        "onsetDateTime": "2015-03-01",
+        "reaction": [
+          {
+            "manifestation": [
+              {
+                "coding": [
+                  {
+                    "system": "http://snomed.info/sct",
+                    "code": "51599000",
+                    "display": "Edema of larynx (disorder)"
+                  }
+                ],
+                "text": "Throat tightness"
+              }
+            ],
+            "severity": "mild"
+          }
+        ]
+      },
+      "request": { "method": "PUT", "url": "AllergyIntolerance/allergy-nsaid-001" }
+    }
+  ]
+}
