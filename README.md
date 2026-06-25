@@ -30,8 +30,8 @@ FHIRLab self-deployments rely on simple, transparent, container-based approaches
 ### 1. Clone the Repository
 
 ```bash
-git clone https://gitlab.com/australian-e-health-research-centre/digital-health-strengthening-standards-capability/core-website.git
-cd core-website
+git clone https://github.com/aehrc/FHIRLab.git
+cd FHIRLab
 ```
 
 ### 2. Configure Environment (Optional)
@@ -280,7 +280,7 @@ This project is designed for learning and regional deployment. Contributions tha
 
 ## Support
 
-For questions or issues, please open an issue in the GitLab repository.
+For questions or issues, please open an issue in the [GitHub repository](https://github.com/aehrc/FHIRLab/issues).
 
 ## License
 
