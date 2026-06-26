@@ -23,6 +23,24 @@ cd FHIRLab/docker
 
 Optional profiles: `--smart` (port 8083), `--profile validator` (port 3500), `--profile formlab` (port 8084).
 
+## Documentation
+
+| Guide | Description |
+|-------|-------------|
+| [Quick Start](docs/quick-start.md) | Full step-by-step setup guide |
+| [Starting & Stopping](docs/guide/lifecycle.md) | Manage services, reset data |
+| [Loading Data](docs/guide/data-loading.md) | Import FHIR resources and terminology |
+| [Using the API](docs/guide/api-usage.md) | HAPI FHIR REST API examples |
+| [SNOMED CT Browser](docs/guide/snomed-browser.md) | Terminology server and licensing |
+| [Configuration](docs/reference/configuration.md) | Environment variables, ports, memory |
+| [Scripts Reference](docs/reference/scripts.md) | All shell scripts explained |
+| [Postman Collection](docs/reference/postman.md) | API testing setup |
+| [FormLab](docs/formlab.md) | Optional SMART on FHIR forms environment |
+| [IG Validator](docs/validator.md) | Optional FHIR IG validator |
+| [Troubleshooting](docs/troubleshooting.md) | Common issues and fixes |
+| [Learning Resources](docs/resources/learning.md) | FHIR education and Postman workspaces |
+| [Upstream Projects](docs/resources/upstream.md) | Open-source projects FHIRLab builds on |
+
 ## Components
 
 | Component | Description |

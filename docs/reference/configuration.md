@@ -80,9 +80,7 @@ SNOWSTORM_MAX_HEAP=1g
 
 ### Allow Remote Access to Elasticsearch
 
-!!! warning "Security Risk"
-    Only do this in trusted environments.
-
+> **Warning:** Only do this in trusted environments.
 ```bash
 # In .env
 ES_PORT=0.0.0.0:9200
@@ -120,9 +118,7 @@ This file is automatically merged with the main compose file.
 | **HAPI FHIR** | In-memory H2 database | Data resets on restart |
 | **Snowstorm** | Docker volume `fhirlab-elastic-data` | Persists between restarts |
 
-!!! note "HAPI FHIR Data"
-    By default, HAPI FHIR uses an in-memory database for simplicity. Data will be lost when the container restarts. This is intentional for a learning environment - use `load-data.sh` to reload example data after restart.
-
+> **Note:** By default, HAPI FHIR uses an in-memory database for simplicity. Data will be lost when the container restarts. This is intentional for a learning environment - use `load-data.sh` to reload example data after restart.
 ### Backup Volumes
 
 ```bash

@@ -83,9 +83,7 @@ Skip the confirmation prompt:
 ./scripts/reset.sh --force
 ```
 
-!!! warning "Data Loss"
-    Reset permanently deletes all FHIR resources, terminology data, and configurations. This cannot be undone.
-
+> **Warning:** Reset permanently deletes all FHIR resources, terminology data, and configurations. This cannot be undone.
 ## Checking Status
 
 ### Smoke Test
@@ -133,9 +131,7 @@ docker compose logs -f
 | SNOMED Browser | 10-20 seconds |
 | SMART Launcher | 10-20 seconds |
 
-!!! tip "Patience with Snowstorm"
-    Snowstorm can take several minutes to fully initialize, especially on first run or after loading terminology data.
-
+> **Tip:** Snowstorm can take several minutes to fully initialize, especially on first run or after loading terminology data.
 ## Troubleshooting Startup Issues
 
 ### Services Won't Start

@@ -33,6 +33,4 @@ Operational files that should **not** be reconciled to GitHub (they are GitLab-s
 
 ## CI/CD
 
-`.gitlab-ci.yml` builds the MkDocs documentation and publishes it to GitLab Pages. The GitLab Pages site is the live rendered documentation, but it is an internal build artefact — its URL is not published in end-user content.
-
-The GitHub repo does not run a docs build pipeline; it carries the MkDocs source for reference and local use.
+There is no active CI/CD pipeline. Documentation is plain Markdown browsable directly on GitHub; MkDocs infrastructure has been removed.

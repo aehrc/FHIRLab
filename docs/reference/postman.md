@@ -2,9 +2,7 @@
 
 Use Postman to explore the FHIRLab Core APIs interactively.
 
-!!! success "Ready-to-Use Collection"
-    FHIRLab Core includes a pre-configured Postman collection with 15 example requests for HAPI FHIR and Snowstorm APIs. No manual setup required!
-
+> FHIRLab Core includes a pre-configured Postman collection with 15 example requests for HAPI FHIR and Snowstorm APIs. No manual setup required!
 ## Download Collection Files
 
 The collection files are included in the repository:
@@ -14,8 +12,8 @@ The collection files are included in the repository:
 
 Or download directly:
 
-- [:octicons-download-24: Download Collection](https://raw.githubusercontent.com/fhirlab/core/main/postman/FHIRLab-Core.postman_collection.json)
-- [:octicons-download-24: Download Environment](https://raw.githubusercontent.com/fhirlab/core/main/postman/FHIRLab-Core.postman_environment.json)
+- [Download Collection](https://raw.githubusercontent.com/aehrc/FHIRLab/master/postman/FHIRLab-Core.postman_collection.json)
+- [Download Environment](https://raw.githubusercontent.com/aehrc/FHIRLab/master/postman/FHIRLab-Core.postman_environment.json)
 
 ## Getting Postman
 

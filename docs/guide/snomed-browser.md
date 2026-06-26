@@ -37,11 +37,10 @@ Requires a license from your NRC or SNOMED International. Download from [MLDS](h
 
 ### Licensing Constraints
 
-!!! warning "Redistribution and automated download are not permitted"
-    - SNOMED CT release files **cannot be redistributed** to other users
-    - Downloads **cannot be automated** — each user must obtain their own copy through MLDS
-    - FHIRLab scripts upload a file you have already downloaded; they do not fetch SNOMED CT on your behalf
-
+> **Warning:**
+> - SNOMED CT release files **cannot be redistributed** to other users
+> - Downloads **cannot be automated** — each user must obtain their own copy through MLDS
+> - FHIRLab scripts upload a file you have already downloaded; they do not fetch SNOMED CT on your behalf
 ## Loading SNOMED CT into Snowstorm
 
 Snowstorm accepts SNOMED CT RF2 release packages (`.zip` files) via its REST API. The import is asynchronous: create a job, upload the file, then wait.
@@ -87,9 +86,7 @@ Status progresses: `WAITING_FOR_FILE` → `RUNNING` → `COMPLETED`.
 - GPS: typically a few minutes
 - Full international release: 30+ minutes
 
-!!! tip "No `jq` installed?"
-    Install with `apt install jq` or `brew install jq`. Or copy the `id` value from the Step 1 JSON response manually.
-
+> **Tip:** Install with `apt install jq` or `brew install jq`. Or copy the `id` value from the Step 1 JSON response manually.
 See the [Snowstorm loading guide](https://github.com/IHTSDO/snowstorm/blob/master/docs/loading-snomed.md) for full details.
 
 ## Snowstorm API
