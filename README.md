@@ -4,19 +4,13 @@ A minimal, Docker-based FHIR learning environment for healthcare teams.
 
 FHIRLab Core provides a complete healthcare interoperability stack — HAPI FHIR R4, Snowstorm SNOMED CT terminology server, and optional SMART on FHIR capabilities — that regional teams can deploy, experiment with, and learn from without ongoing DevOps support.
 
-## Documentation
-
-Full documentation: **https://australian-e-health-research-centre.gitlab.io/digital-health-strengthening-standards-capability/core-website/**
-
-GitHub mirror: https://github.com/aehrc/FHIRLab
-
 ## Quick Start
 
 **Prerequisites:** Docker 20.x+, Docker Compose 2.x+, 8 GB RAM
 
 ```bash
-git clone https://gitlab.com/australian-e-health-research-centre/digital-health-strengthening-standards-capability/core-website.git
-cd core-website/docker
+git clone https://github.com/aehrc/FHIRLab.git
+cd FHIRLab/docker
 ./scripts/start.sh
 ./scripts/smoke-test.sh
 ```
@@ -50,7 +44,7 @@ FHIRLab self-deployments rely on simple, transparent, container-based approaches
 
 ## Contributing
 
-Contributions that maintain simplicity and accessibility are welcome. Open an issue at https://github.com/aehrc/FHIRLab/issues.
+Open an issue at https://github.com/aehrc/FHIRLab/issues.
 
 ## License
 

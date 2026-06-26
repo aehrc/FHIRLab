@@ -16,19 +16,10 @@ Before you begin, ensure you have:
 
 ## Step 1: Clone the Repository
 
-=== "GitLab (canonical)"
-
-    ```bash
-    git clone https://gitlab.com/australian-e-health-research-centre/digital-health-strengthening-standards-capability/core-website.git
-    cd core-website
-    ```
-
-=== "GitHub (mirror)"
-
-    ```bash
-    git clone https://github.com/aehrc/FHIRLab.git
-    cd FHIRLab
-    ```
+```bash
+git clone https://github.com/aehrc/FHIRLab.git
+cd FHIRLab
+```
 
 ## Step 2: Start the Services
 
@@ -109,9 +100,6 @@ To populate the FHIR server with example resources:
 - [Using the API](guide/api-usage.md) - Query and create FHIR resources
 - [Loading Data](guide/data-loading.md) - Import your own data
 - [Configuration](reference/configuration.md) - Customize ports and settings
-
-!!! tip "Try the Postman Collection"
-    Import the ready-to-use Postman collection from `postman/FHIRLab-Core.postman_collection.json` to explore all API endpoints with pre-configured examples. See the [Postman Collection](reference/postman.md) guide for details.
 
 ## Quick Reference
 
