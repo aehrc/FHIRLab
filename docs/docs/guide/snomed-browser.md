@@ -15,33 +15,82 @@ The SNOMED CT Browser provides a visual interface for:
 - Viewing concept details and relationships
 - Exploring reference sets
 
-## Loading SNOMED CT Content
+## SNOMED CT Licensing
 
-!!! warning "Content Not Included"
-    SNOMED CT content is not included due to licensing requirements. You'll need to load content separately.
+SNOMED CT is a proprietary clinical terminology owned by SNOMED International. Loading SNOMED CT content into Snowstorm requires a license.
 
-### Obtaining SNOMED CT
+### License Options
 
-1. **Register** at [SNOMED International Member Licensing](https://www.snomed.org/snomed-ct/get-snomed)
-2. **Download** the appropriate RF2 release files
-3. **Import** using Snowstorm's import API
+**SNOMED International member countries (free)**
 
-### Import Process
+Many countries are [SNOMED International members](https://www.snomed.org/members). If yours is, you may be entitled to a free license through your National Release Centre (NRC). Register and download via the [Member Licensing and Distribution Service (MLDS)](https://mlds.ihtsdotools.org/).
 
-Refer to the [Snowstorm documentation](https://github.com/IHTSDO/snowstorm/blob/master/docs/loading-snomed.md) for detailed import instructions.
+**SNOMED CT Global Patient Set (GPS) — available in any country**
 
-Basic import via API:
+The GPS is a curated subset of ~8,000 SNOMED CT concepts covering clinical findings, procedures, and substances used in international patient summaries. It is available under a less restrictive license with no NRC membership required.
+
+**This is the recommended starting point for learning.**
+
+**Full SNOMED CT International Release**
+
+Requires a license from your NRC or SNOMED International. Download from [MLDS](https://mlds.ihtsdotools.org/) after authenticating with a licensed account.
+
+### Licensing Constraints
+
+!!! warning "Redistribution and automated download are not permitted"
+    - SNOMED CT release files **cannot be redistributed** to other users
+    - Downloads **cannot be automated** — each user must obtain their own copy through MLDS
+    - FHIRLab scripts upload a file you have already downloaded; they do not fetch SNOMED CT on your behalf
+
+## Loading SNOMED CT into Snowstorm
+
+Snowstorm accepts SNOMED CT RF2 release packages (`.zip` files) via its REST API. The import is asynchronous: create a job, upload the file, then wait.
+
+### What to Download
+
+From [MLDS](https://mlds.ihtsdotools.org/), download an RF2 **Snapshot** package:
+
+| Release | File name pattern | Size | When to use |
+|---------|-------------------|------|-------------|
+| **GPS** | `SnomedCT_GPSRefset_Production_YYYYMMDDTXXXXXX.zip` | ~300 MB | Learning — recommended |
+| Full international | `SnomedCT_InternationalRF2_PRODUCTION_YYYYMMDDTXXXXXX.zip` | ~1.5 GB | Full SNOMED CT content |
+
+### Step 1: Create an Import Job
 
 ```bash
-# Start import job
-curl -X POST "http://localhost:8081/imports" \
+JOB_ID=$(curl -s -X POST "http://localhost:8081/imports" \
   -H "Content-Type: application/json" \
   -d '{
     "branchPath": "MAIN",
     "createCodeSystemVersion": true,
     "type": "SNAPSHOT"
-  }'
+  }' | jq -r '.id')
+
+echo "Import job: $JOB_ID"
 ```
+
+### Step 2: Upload the RF2 Package
+
+```bash
+curl -X POST "http://localhost:8081/imports/$JOB_ID/archive" \
+  -F "file=@/path/to/SnomedCT_Release.zip"
+```
+
+### Step 3: Monitor Progress
+
+```bash
+curl "http://localhost:8081/imports/$JOB_ID"
+```
+
+Status progresses: `WAITING_FOR_FILE` → `RUNNING` → `COMPLETED`.
+
+- GPS: typically a few minutes
+- Full international release: 30+ minutes
+
+!!! tip "No `jq` installed?"
+    Install with `apt install jq` or `brew install jq`. Or copy the `id` value from the Step 1 JSON response manually.
+
+See the [Snowstorm loading guide](https://github.com/IHTSDO/snowstorm/blob/master/docs/loading-snomed.md) for full details.
 
 ## Snowstorm API
 
