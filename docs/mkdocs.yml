@@ -5,9 +5,9 @@
 
 site_name: FHIRLab Core
 site_description: A minimal, Docker-based FHIR learning environment for healthcare teams
-site_url: https://fhirlab.github.io/core/
-repo_url: https://github.com/fhirlab/core
-repo_name: fhirlab/core
+site_url: https://australian-e-health-research-centre.gitlab.io/digital-health-strengthening-standards-capability/core-website/
+repo_url: https://github.com/aehrc/FHIRLab
+repo_name: aehrc/FHIRLab
 
 theme:
   name: material
@@ -88,5 +88,5 @@ plugins:
 extra:
   social:
     - icon: fontawesome/brands/github
-      link: https://github.com/fhirlab/core
+      link: https://github.com/aehrc/FHIRLab
   generator: false

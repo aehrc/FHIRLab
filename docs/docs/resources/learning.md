@@ -69,6 +69,14 @@ See `postman/learning/README.md` for bundle details, source attribution, and all
 | [Technical Implementation Guide](https://confluence.ihtsdotools.org/display/DOCTIG) | Implementation details |
 | [FHIR Terminology Module](https://hl7.org/fhir/R4/terminology-module.html) | Using SNOMED CT with FHIR |
 
+### Terminology Server API Examples
+
+Jim Steel's Postman workspace demonstrates the FHIR Terminology Service API — `$lookup`, `$expand`, `$validate-code`, `$subsumes`, and concept search — built on Ontoserver. The same FHIR operations work against FHIRLab Core's Snowstorm instance.
+
+[**jimsteel / Ontoserver Postman workspace →**](https://www.postman.com/jimsteel/ontoserver/)
+
+To use with FHIRLab Core's Snowstorm, set the base URL in collection variables to `http://localhost:8081/fhir`.
+
 ## Healthcare Standards
 
 ### HL7

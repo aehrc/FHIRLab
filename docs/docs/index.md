@@ -82,4 +82,4 @@ FHIRLab Core is designed for:
 
 - Check the [Troubleshooting](troubleshooting.md) guide
 - Review [Upstream Documentation](resources/upstream.md) for detailed reference
-- Open an issue on [GitHub](https://github.com/fhirlab/core/issues)
+- Open an issue on [GitHub](https://github.com/aehrc/FHIRLab/issues)
