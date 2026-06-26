@@ -20,9 +20,7 @@ This loads a variety of example resources including:
 - Medications
 - And more...
 
-!!! success "No Installation Required"
-    The script uses the HAPI FHIR CLI bundled inside the Docker container. No local installation is needed.
-
+> The script uses the HAPI FHIR CLI bundled inside the Docker container. No local installation is needed.
 **Reference:** [HAPI FHIR CLI Documentation](https://hapifhir.io/hapi-fhir/docs/tools/hapi_fhir_cli.html#upload-example-resources-upload-examples)
 
 ## Uploading Terminology
@@ -86,9 +84,7 @@ Snowstorm requires SNOMED CT RF2 release files. Due to licensing requirements, t
 2. Download the RF2 release files
 3. Follow the [Snowstorm import documentation](https://github.com/IHTSDO/snowstorm/blob/master/docs/loading-snomed.md)
 
-!!! note "Licensing"
-    SNOMED CT usage requires appropriate licensing. FHIRLab Core uses Snowstorm to avoid licensing issues with the server itself, but content still requires proper licensing.
-
+> **Note:** SNOMED CT usage requires appropriate licensing. FHIRLab Core uses Snowstorm to avoid licensing issues with the server itself, but content still requires proper licensing.
 ## Verifying Loaded Data
 
 ### Check FHIR Resources

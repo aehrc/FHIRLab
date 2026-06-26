@@ -11,9 +11,7 @@ Before you begin, ensure you have:
 - [x] At least **8 GB RAM** available
 - [x] Basic command-line familiarity
 
-!!! tip "Check Docker Installation"
-    Run `docker --version` and `docker compose version` to verify your installation.
-
+> **Tip:** Run `docker --version` and `docker compose version` to verify your installation.
 ## Step 1: Clone the Repository
 
 ```bash
@@ -35,9 +33,7 @@ This will:
 3. Start all services
 4. Wait for services to become healthy
 
-!!! info "First Run"
-    The first start takes longer as Docker downloads the images (~2-3 GB). Subsequent starts are much faster.
-
+> **Note:** The first start takes longer as Docker downloads the images (~2-3 GB). Subsequent starts are much faster.
 ## Step 3: Verify Everything Works
 
 ```bash
@@ -88,12 +84,8 @@ To populate the FHIR server with example resources:
 ./scripts/load-data.sh
 ```
 
-!!! success "No Installation Required"
-    The script uses the HAPI FHIR CLI bundled inside the Docker container.
-
-!!! info "Data Persistence"
-    HAPI FHIR uses an in-memory database by default. Data will be cleared when containers restart. Run `load-data.sh` again after restarts to reload example data. This is intentional for a learning environment.
-
+> The script uses the HAPI FHIR CLI bundled inside the Docker container.
+> **Note:** HAPI FHIR uses an in-memory database by default. Data will be cleared when containers restart. Run `load-data.sh` again after restarts to reload example data. This is intentional for a learning environment.
 ## What's Next?
 
 - **[Postman Collection](reference/postman.md)** - Ready-to-use API examples

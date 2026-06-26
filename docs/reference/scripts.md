@@ -73,9 +73,7 @@ Stops services and removes all data.
 3. Removes Docker volumes
 4. Cleans up orphaned resources
 
-!!! danger "Data Loss"
-    This permanently deletes all data. Cannot be undone.
-
+> **⚠ Warning:** This permanently deletes all data. Cannot be undone.
 **Example:**
 
 ```bash
