@@ -16,19 +16,10 @@ Before you begin, ensure you have:
 
 ## Step 1: Clone the Repository
 
-=== "GitLab (canonical)"
-
-    ```bash
-    git clone https://gitlab.com/australian-e-health-research-centre/digital-health-strengthening-standards-capability/core-website.git
-    cd core-website
-    ```
-
-=== "GitHub (mirror)"
-
-    ```bash
-    git clone https://github.com/aehrc/FHIRLab.git
-    cd FHIRLab
-    ```
+```bash
+git clone https://github.com/aehrc/FHIRLab.git
+cd FHIRLab
+```
 
 ## Step 2: Start the Services
 
