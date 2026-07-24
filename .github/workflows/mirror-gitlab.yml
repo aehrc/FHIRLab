@@ -21,6 +21,6 @@ jobs:
         run: |
           git remote add gitlab https://oauth2:${{ secrets.GITLAB_TOKEN }}@gitlab.com/australian-e-health-research-centre/digital-health-strengthening-standards-capability/core-website.git
           git fetch gitlab main --tags
-          git checkout main
+          git checkout -B master origin/master
           git merge gitlab/main --ff-only
-          git push origin main --tags
+          git push origin master --tags
