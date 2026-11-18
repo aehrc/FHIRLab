@@ -31,6 +31,8 @@ The GPS is a curated subset of ~8,000 SNOMED CT concepts covering clinical findi
 
 **This is the recommended starting point for learning.**
 
+> **Note:** the GPS package is a list of concept IDs only. On its own it supports membership checks but not `$lookup`, `$expand` or `$validate-code`. For those, load the International Edition as well. See [Hosted Services: Snowstorm Limitations](../hosted-services.md#limitations).
+
 **Full SNOMED CT International Release**
 
 Requires a license from your NRC or SNOMED International. Download from [MLDS](https://mlds.ihtsdotools.org/) after authenticating with a licensed account.

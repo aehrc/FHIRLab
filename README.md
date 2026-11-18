@@ -38,6 +38,7 @@ Optional profiles: `--smart` (port 8083), `--profile validator` (port 3500), `--
 | [FormLab](docs/formlab.md) | Optional SMART on FHIR forms environment |
 | [IG Validator](docs/validator.md) | Optional FHIR IG validator |
 | [Troubleshooting](docs/troubleshooting.md) | Common issues and fixes |
+| [Hosted Services](docs/hosted-services.md) | What CSIRO runs at fhirlab.net; Snowstorm limitations |
 | [Learning Resources](docs/resources/learning.md) | FHIR education and Postman workspaces |
 | [Upstream Projects](docs/resources/upstream.md) | Open-source projects FHIRLab builds on |
 
